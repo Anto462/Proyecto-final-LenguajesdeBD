@@ -1,3 +1,10 @@
+*{
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+}
 .header{
     height: 55px;
     position: relative;
@@ -7,6 +14,7 @@
 }
 body{
     background: #161515;
+    text-align: center;
 
 }
 .centrar{
@@ -14,6 +22,14 @@ body{
     align-items: center;
     text-align: center; 
     font-family: 'Roboto Mono', monospace;  
+}
+.titulos{
+    color: whitesmoke;
+}
+p{
+    margin-bottom: 40px;
+    font-size: 28;
+    color: whitesmoke;
 }
 /* Navbar */
 .navbar-brand{
@@ -44,7 +60,7 @@ box-shadow: -5px 6px 36px 0px rgba(0,0,0,0.75);
     font-family: 'Roboto Mono', monospace;
     font-weight: bold;
     font-size: 18px;
-    background-color: rgb(214, 134, 14);
+    background-color: rgb(185, 206, 0);
     transition: 0.5s;
 
     border-radius: 50px 50px 50px 50px;
@@ -53,8 +69,8 @@ box-shadow: -5px 6px 36px 0px rgba(0,0,0,0.75);
 border: 0px solid #000000;
 
 -webkit-box-shadow: 3px 2px 26px -3px rgba(199,103,0,1);
--moz-box-shadow: 3px 2px 26px -3px rgba(199,103,0,1);
-box-shadow: 3px 2px 26px -3px rgba(199,103,0,1);
+-moz-box-shadow: 3px 2px 26px -3px rgb(233, 120, 0);
+box-shadow: 3px 2px 26px -3px rgb(255, 132, 0);
 
 }
 .nav-izquierda{
@@ -65,5 +81,91 @@ box-shadow: 3px 2px 26px -3px rgba(199,103,0,1);
 .nav-izquierda2{
     justify-content: left;
     position: relative;
-    left: 450px;
+    left: 425px;
 }
+/* Fin Navbar */
+
+.part1{
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+
+height: 60vh;
+background: url(https://www.inmonews.es/wp-content/uploads/2017/01/kranhaus-1612184_1280.jpg) no-repeat center;
+background-size: cover;
+
+border-radius: 35px 35px 35px 35px;
+-moz-border-radius: 35px 35px 35px 35px;
+-webkit-border-radius: 35px 35px 35px 35px;
+border: 0px solid #000000;
+}
+
+button{
+    width: 200px;
+    padding: 15px 0;
+    text-align: center;
+    margin: 20px 10px;
+    border-radius: 25px;
+    font-weight: bold;
+    border: 2px solid slategray;
+    background: transparent;
+    color: white;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+span{
+    background: gray;
+    height: 100%;
+    width:0;
+    border-radius: 25px;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    z-index: -1;
+    transition: 0.5s;
+}
+
+button:hover span{
+    width: 100%;
+}
+button:hover{
+    border: none;
+}
+
+
+/* Footer */
+footer{
+    background-color:   rgb(185, 206, 0);
+    height: auto;
+    width: 100%;
+    font-family: 'Roboto Mono', monospace;
+    padding: 5px;
+     
+}
+.footer-cont{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+}
+.socialmedia{
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 40px;
+
+    font-size: 25px;
+}
+.socialmedia li{
+    margin: 0 15px;
+}
+.socialmedia a{
+    text-decoration: none;
+    color: #ffffff;
+}
+/* Fin Footer */
