@@ -91,14 +91,41 @@ flex-direction: column;
 justify-content: center;
 align-items: center;
 
-height: 60vh;
-background: url(https://www.inmonews.es/wp-content/uploads/2017/01/kranhaus-1612184_1280.jpg) no-repeat center;
+height: 550px;
+width: 100%;
 background-size: cover;
 
 border-radius: 35px 35px 35px 35px;
 -moz-border-radius: 35px 35px 35px 35px;
 -webkit-border-radius: 35px 35px 35px 35px;
 border: 0px solid #000000;
+
+animation: change 15s infinite ease-in-out;
+}
+
+@keyframes change{
+
+    0%{
+        transition: 0.5s;
+        background: url(images2/constru1.jpg) no-repeat center;
+    }
+    20%{
+        transition: 0.5s;
+        background: url(images2/constru2.jpg) no-repeat center;  
+    }
+    40%{
+        transition: 0.5s;
+        background: url(images2/constru3.jpg) no-repeat center; 
+    }
+    80%{
+        transition: 0.5s;
+        background: url(images2/constru4.jpg) no-repeat center; 
+    }
+    100%{
+        transition: 0.5s;
+        background: url(images2/constru5.jpg) no-repeat center; 
+    }
+
 }
 
 button{
@@ -138,7 +165,7 @@ button:hover{
 
 /* Footer */
 footer{
-    background-color:   rgb(185, 206, 0);
+    background-color:   rgb(164, 180, 14);
     height: auto;
     width: 100%;
     font-family: 'Roboto Mono', monospace;
