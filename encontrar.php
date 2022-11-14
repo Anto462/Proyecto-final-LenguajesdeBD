@@ -1,3 +1,13 @@
+<?php
+include("conexion.php");
+$con = conectar();
+
+$sql = "---"; //Aca se coloca la consulta, ej, select * from usuarios
+$query = mysqli_query($con, $sql);
+$row = mysqli_fetch_array($query);
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,7 +23,7 @@
     <script defer src="js/script.js"></script>
 </head>
 <body>
-    <header th:fragment="header" class="header">  
+<header th:fragment="header" class="header">  
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container-fluid">
               <a class="navbar-brand" href="index.html"> <img src="images/Installation.png" width="40" height="40" class="d-inline-block align-top" alt=""/>  CONSTRUNET</a>
@@ -55,41 +65,59 @@
           </nav>
     </header>
     <hr>
-    <div class="container">
-      <div class="part1">
-        <h1 class="titulos">¿Quienes somos?</h1>
-        <p>asadsadasdasdasdasd</p>
-
-        <div>
-          <button type="button"><span></span> <a style="text-decoration:none ; color:whitesmoke ;" href="sobre.html"> IR </a></button>
-        </div>
-      </div>
-      <hr>
-      <div>
-        <h2 class="titulos">Proyectos de interes</h2>
-        <div class="box-container">
-
-        <div class="box">
-          <h3>Nombre del proyecto</h3>
-          <p>descripcion</p>
-        </div>
-        <div class="box">
-          <h3>Nombre del proyecto2</h3>
-          <p>descripcion</p>
-        </div>
-        <div class="box">
-          <h3>Nombre del proyecto3</h3>
-          <p>descripcion</p>
-        </div>
-  
-        </div>
-      </div>
-      <hr>
-      <div>
-        <h2 class="titulos">Trabajos realizados</h2>
-
-      </div>
+    <div class="boxsn">
+    <h1 class="titulossn">Encuentran a un especialista</h1>
     </div>
+    <hr>
+    <div style="background-color:  #f1642c33;" class="main">
+        <?php
+            //Dejo la base para mostrar los datos e cards una vez se logre la conexion
+
+            require_once 'consultaBD.php';
+            ImprimeDatos();
+
+            function ImprimeDatos()
+            {
+                $elSQL = "SELECT pr.ID_USUARIO,NOMBRE,APELLIDOS,EMAIL,PUNTUACION,ROL
+                                FROM usuarios pr"; ///pongo un select de ejemplo pero aqui usariamos alguna view o parameter, se deberia trabajar de forma similar
+                $miQuery = ConsultaSQL($elSQL);
+                echo "<div id=users>";
+                echo "<h3>Listado de trabajadores:</h3>";
+                echo "<br>";
+                imprimeTabla($miQuery);
+                echo "</div>";
+            }
+            //Aca se inician a generar las cards
+            function imprimeTabla($miQuery)
+            {
+                echo "<div style='background-color:  black; margin:5px ;' class='row row-cols-4 centrar'>";
+                if ($miQuery->num_rows > 0) {
+                    echo "<tr>";
+                    while ($row = $miQuery->fetch_assoc()) {
+                echo "<div style='margin:10px ;' class='card text-center text-white bg-dark mb-3' style='width: 18rem;'>";
+                echo "<img src='images/worker01.jpg' class='card-img-top' alt='...'>";
+                echo "<div class='card-body'>";
+                echo "<h5 class='card-title'>" . $row['NOMBRE'] . $row['APELLIDOS'] ."</h5>";
+                echo "<h6 class='card-subtitle mb-2 text-muted'>Puntuacion:</h6>";
+                echo "<h6 class='card-subtitle mb-2 text-muted'>" . $row['PUNTUACION'] .      "</h6>";
+                echo " <p class='card-text'>" . $row['EMAIL'] .      "</p>";
+                error_reporting(0);
+//Aca puede colocarse un modificar si es necesario o un delete
+
+                echo "</div>";
+                echo "</div>";
+                    }
+                } else {
+                    echo "<tr>";
+                    echo " <th> No se tiene trabajadores de momento </th>";
+                    echo "</tr>";
+                    
+                }
+                echo "</div>";
+                echo "</table>";
+            }
+            ?>
+        </div>
     <hr>
 <footer>
 <div class="footer-cont">
