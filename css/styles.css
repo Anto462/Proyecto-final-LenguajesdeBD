@@ -169,7 +169,70 @@ span{
     z-index: -1;
     transition: 0.5s;
 }
+/* imagenes en index especialidades*/
+.construccion{
+background-color:  rgb(164, 180, 14);
+display: flex;
+flex-direction: column;
+justify-content: center;
+padding: 5px;
 
+border-radius: 90px 31px 90px 31px;
+-moz-border-radius: 90px 31px 90px 31px;
+-webkit-border-radius: 90px 31px 90px 31px;
+border: 0px solid #000000;
+
+-webkit-box-shadow: -1px 3px 34px 0px rgba(0,0,0,0.68);
+-moz-box-shadow: -1px 3px 34px 0px rgba(0,0,0,0.68);
+box-shadow: -1px 3px 34px 0px rgba(0,0,0,0.68);
+}
+.construccion:hover{
+transition: 0.5s;
+
+-webkit-box-shadow: -2px 3px 74px -1px rgba(166,180,14,1);
+-moz-box-shadow: -2px 3px 74px -1px rgba(166,180,14,1);
+box-shadow: -2px 3px 74px -1px rgba(166,180,14,1);
+}   
+.albañil{
+    background-image: url(images2/albañil.jpg);
+    -webkit-text-fill-color: rgb(255, 255, 255);
+
+    border-radius: 90px 31px 90px 31px;
+    -moz-border-radius: 90px 31px 90px 31px;
+    -webkit-border-radius: 90px 31px 90px 31px;
+    border: 0px solid #000000;
+
+    -webkit-box-shadow: -1px 3px 34px 0px rgba(0,0,0,0.68);
+    -moz-box-shadow: -1px 3px 34px 0px rgba(0,0,0,0.68);
+    box-shadow: -1px 3px 34px 0px rgba(0,0,0,0.68);
+}
+.soldador{
+    background-image: url(images2/Soldador3.jpg);
+    -webkit-text-fill-color: rgb(255, 255, 255);
+
+    border-radius: 90px 31px 90px 31px;
+    -moz-border-radius: 90px 31px 90px 31px;
+    -webkit-border-radius: 90px 31px 90px 31px;
+    border: 0px solid #000000;
+
+    -webkit-box-shadow: -1px 3px 34px 0px rgba(0,0,0,0.68);
+    -moz-box-shadow: -1px 3px 34px 0px rgba(0,0,0,0.68);
+    box-shadow: -1px 3px 34px 0px rgba(0,0,0,0.68);
+}
+.Carpinteria{
+    background-image: url(images2/wood.jpg);
+    -webkit-text-fill-color: rgb(255, 255, 255);
+
+    border-radius: 90px 31px 90px 31px;
+    -moz-border-radius: 90px 31px 90px 31px;
+    -webkit-border-radius: 90px 31px 90px 31px;
+    border: 0px solid #000000;
+
+    -webkit-box-shadow: -1px 3px 34px 0px rgba(0,0,0,0.68);
+    -moz-box-shadow: -1px 3px 34px 0px rgba(0,0,0,0.68);
+    box-shadow: -1px 3px 34px 0px rgba(0,0,0,0.68);
+}
+/* botones */
 button:hover span{
     width: 100%;
 }
