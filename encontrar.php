@@ -2,7 +2,7 @@
 include("conexion.php");
 $con = conectar();
 
-$sql = "---"; //Aca se coloca la consulta, ej, select * from usuarios
+$sql = mysqli_query("SELECT * FROM DEMO.usuarios"); //Aca se coloca la consulta, ej, select * from usuarios
 $query = mysqli_query($con, $sql);
 $row = mysqli_fetch_array($query);
 
@@ -78,8 +78,8 @@ $row = mysqli_fetch_array($query);
 
             function ImprimeDatos()
             {
-                $elSQL = "SELECT pr.ID_USUARIO,NOMBRE,APELLIDOS,EMAIL,PUNTUACION,ROL
-                                FROM usuarios pr"; ///pongo un select de ejemplo pero aqui usariamos alguna view o parameter, se deberia trabajar de forma similar
+                $elSQL = "SELECT *
+                                FROM DEMO.usuarios"; ///pongo un select de ejemplo pero aqui usariamos alguna view o parameter, se deberia trabajar de forma similar
                 $miQuery = ConsultaSQL($elSQL);
                 echo "<div id=users>";
                 echo "<h3>Listado de trabajadores:</h3>";
