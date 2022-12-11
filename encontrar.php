@@ -1,13 +1,3 @@
-<?php
-include("conexion.php");
-$con = conectar();
-
-$sql = mysqli_query("SELECT * FROM DEMO.usuarios"); //Aca se coloca la consulta, ej, select * from usuarios
-$query = mysqli_query($con, $sql);
-$row = mysqli_fetch_array($query);
-
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,6 +9,8 @@ $row = mysqli_fetch_array($query);
     <link rel="stylesheet" href="Css/styles.css">
     <title>Construnet</title>
     <link rel="icon" href="images/Cono-vial-2-923x1024.png" type="image/x-icon">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.js"></script>
     <script src="https://kit.fontawesome.com/eb496ab1a0.js" crossorigin="anonymous"></script>
     <script defer src="js/script.js"></script>
 </head>
@@ -69,54 +61,50 @@ $row = mysqli_fetch_array($query);
     <h1 class="titulossn">Encuentran a un especialista</h1>
     </div>
     <hr>
-    <div style="background-color:  #f1642c33;" class="main">
-        <?php
-            //Dejo la base para mostrar los datos e cards una vez se logre la conexion
+    <div class="main">
+    <?php
+                    // Me coencto
+                    require_once "config.php";
 
-            require_once 'consultaBD.php';
-            ImprimeDatos();
+                    // select
+                    $sql = "SELECT * FROM proveedor";
+                    //nos aseguramos hayan datos
+                    if ($result = $link->query($sql)) {
+                        if ($result->fetchColumn() > 0) { 
+                          echo "<p class='lead'><em>Se muestran los proveedores</em></p>";
+                        } else {
+                          echo "<p class='lead'><em>No se tiene registros</em></p>";
+                        }
+                    } else {
+                        echo "ERROR: No se pudo ejecutar $sql. ";
+                    }
 
-            function ImprimeDatos()
-            {
-                $elSQL = "SELECT *
-                                FROM DEMO.usuarios"; ///pongo un select de ejemplo pero aqui usariamos alguna view o parameter, se deberia trabajar de forma similar
-                $miQuery = ConsultaSQL($elSQL);
                 echo "<div id=users>";
                 echo "<h3>Listado de trabajadores:</h3>";
                 echo "<br>";
-                imprimeTabla($miQuery);
                 echo "</div>";
-            }
-            //Aca se inician a generar las cards
-            function imprimeTabla($miQuery)
-            {
+                foreach ($link->query($sql) as $row) {
                 echo "<div style='background-color:  black; margin:5px ;' class='row row-cols-4 centrar'>";
-                if ($miQuery->num_rows > 0) {
-                    echo "<tr>";
-                    while ($row = $miQuery->fetch_assoc()) {
                 echo "<div style='margin:10px ;' class='card text-center text-white bg-dark mb-3' style='width: 18rem;'>";
                 echo "<img src='images/worker01.jpg' class='card-img-top' alt='...'>";
                 echo "<div class='card-body'>";
-                echo "<h5 class='card-title'>" . $row['NOMBRE'] . $row['APELLIDOS'] ."</h5>";
+                echo "<h5 class='card-title'>" . $row['NOMBRE'] . $row['PRODUCTO'] ."</h5>";
                 echo "<h6 class='card-subtitle mb-2 text-muted'>Puntuacion:</h6>";
-                echo "<h6 class='card-subtitle mb-2 text-muted'>" . $row['PUNTUACION'] .      "</h6>";
+                echo "<h6 class='card-subtitle mb-2 text-muted'>" . $row['FIABILIDAD'] .      "</h6>";
                 echo " <p class='card-text'>" . $row['EMAIL'] .      "</p>";
-                error_reporting(0);
-//Aca puede colocarse un modificar si es necesario o un delete
-
+                echo "<a href='exdelete.php?id_proveedor=" .  $row['ID_PROVEEDOR'] .
+                    "' class='btn btn-primary'> Eliminar </a>";
                 echo "</div>";
                 echo "</div>";
-                    }
-                } else {
-                    echo "<tr>";
-                    echo " <th> No se tiene trabajadores de momento </th>";
-                    echo "</tr>";
-                    
-                }
                 echo "</div>";
                 echo "</table>";
-            }
-            ?>
+
+                
+              }
+
+                    // Close connection
+                    //mysqli_close($link);
+                    ?>
         </div>
     <hr>
 <footer>
