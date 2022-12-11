@@ -7,8 +7,8 @@ id_proveedor number not null
 ,fiabilidad number
 ,localizacion varchar(25)
 ,producto varchar (25)
-,CONSTRAINT proveedor_pk primary key (id_proveedor)
-)
+,primary key (id_proveedor)
+);
 
 create table Usuario(
 id_usuario number not null
@@ -21,9 +21,9 @@ id_usuario number not null
 ,puntacion number
 ,id_proveedor number not null
 
-, CONSTRAINT Usuario_pk primary key (id_usuario)
-, CONSTRAINT provedor_fk FOREIGN KEY (id_proveedor) REFERENCES proveedor 
-)
+,primary key (id_usuario)
+,FOREIGN KEY (id_proveedor) REFERENCES proveedor(id_proveedor) 
+);
 
 
 create table Contratista(
@@ -36,10 +36,10 @@ id_empresa number not null
 ,id_proveedor number not null
 ,id_usuario number not null
 
-, CONSTRAINT Contratista_pk primary key (id_empresa)
-, CONSTRAINT provedor_fk FOREIGN KEY (id_proveedor) REFERENCES proveedor
-, usuario_fk FOREIGN KEY (id_usuario) REFERENCES Usuario  
-)
+,primary key (id_empresa)
+,FOREIGN KEY (id_proveedor) REFERENCES proveedor(id_proveedor)
+,FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario) 
+);
 
 create table Anteproyecto(
 id_ante_proyecto number not null
@@ -50,10 +50,10 @@ id_ante_proyecto number not null
 ,id_usuario number not null
 ,id_empresa number not null
 
-,CONSTRAINT Contratista_pk primary key (id_ante_proyecto)
-,CONSTRAINT Usuario_fk FOREIGN KEY (id_usuario) REFERENCES Usuario 
-,CONSTRAINT empresa_fk FOREIGN KEY (id_empresa) REFERENCES Contratista
-)
+,primary key (id_ante_proyecto)
+,FOREIGN KEY (id_usuario) REFERENCES Usuario (id_usuario)
+,FOREIGN KEY (id_empresa) REFERENCES Contratista (id_empresa)
+);
 
 create table proyectos (
 id_proyecto number not null
@@ -65,6 +65,6 @@ id_proyecto number not null
 ,planofinal varchar (25)
 ,id_ante_proyecto number not null
 
-,CONSTRAINT proyectos_pk primary key  (id_proyecto)
-,CONSTRAINT anteproyecto_fk FOREIGN KEY (id_ante_proyecto) REFERENCES Anteproyecto
-)
+,primary key  (id_proyecto)
+,FOREIGN KEY (id_ante_proyecto) REFERENCES Anteproyecto(id_ante_proyecto)
+);
