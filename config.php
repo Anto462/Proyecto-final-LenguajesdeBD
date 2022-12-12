@@ -4,11 +4,11 @@ define('DB_SERVER', '(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)
 define('DB_USERNAME', 'Anto462');
 define('DB_PASSWORD', 'anto462');
 
-//Oracle database
+//Nos conectamos
 try {
     $link = new PDO("oci:dbname=" . DB_SERVER, DB_USERNAME, DB_PASSWORD);
     if($link){
-        echo 'Conexion Exitosa...';
+       // echo 'Conexion Exitosa';
     }
 } catch (PDOException $e) {
     echo ($e->getMessage());

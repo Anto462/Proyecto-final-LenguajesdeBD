@@ -34,7 +34,7 @@
                     <a class="nav-link active nav-izquierda" href=""><img src="https://creazilla-store.fra1.digitaloceanspaces.com/emojis/56482/gear-emoji-clipart-md.png" width="25" height="25" class="d-inline-block align-top" alt=""/>  Proyectos</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link active nav-izquierda" href="encontrar.php"><img src="https://creazilla-store.fra1.digitaloceanspaces.com/emojis/56482/gear-emoji-clipart-md.png" width="25" height="25" class="d-inline-block align-top" alt=""/>  Encontrar</a>
+                    <a class="nav-link active nav-izquierda" href="general.php"><img src="https://creazilla-store.fra1.digitaloceanspaces.com/emojis/56482/gear-emoji-clipart-md.png" width="25" height="25" class="d-inline-block align-top" alt=""/>  Encontrar</a>
                   </li>
                 </ul>
               </div>
@@ -63,6 +63,10 @@
     <hr>
     <div class="main">
     <?php
+error_reporting(0);
+$opcion = ($_GET['opcion']);
+if($opcion==1){
+//////////////////////////////////PROVEDOR//////////////////////////////////////////////////////////////////////////
                     // Me coencto
                     require_once "config.php";
 
@@ -71,40 +75,118 @@
                     //nos aseguramos hayan datos
                     if ($result = $link->query($sql)) {
                         if ($result->fetchColumn() > 0) { 
-                          echo "<p class='lead'><em>Se muestran los proveedores</em></p>";
+                          echo "<p class='lead'><em>Conoce a nuestros proveedores</em></p>";
                         } else {
                           echo "<p class='lead'><em>No se tiene registros</em></p>";
                         }
                     } else {
                         echo "ERROR: No se pudo ejecutar $sql. ";
                     }
-
-                echo "<div id=users>";
-                echo "<h3>Listado de trabajadores:</h3>";
-                echo "<br>";
-                echo "</div>";
+                echo "<a href='ingprovedor.php?' class='btn btn-primary'> Añadir </a>";
+                echo "<hr>";
+                echo "<div style='background-color:  black; margin:5px ;' class='row row-cols-5 centrar'>";
+                //Se comienzan a colocar los usuarios
                 foreach ($link->query($sql) as $row) {
-                echo "<div style='background-color:  black; margin:5px ;' class='row row-cols-4 centrar'>";
                 echo "<div style='margin:10px ;' class='card text-center text-white bg-dark mb-3' style='width: 18rem;'>";
                 echo "<img src='images/worker01.jpg' class='card-img-top' alt='...'>";
                 echo "<div class='card-body'>";
-                echo "<h5 class='card-title'>" . $row['NOMBRE'] . $row['PRODUCTO'] ."</h5>";
+                echo "<h5 class='card-title'>" . $row['NOMBRE'] . "-" . $row['PRODUCTO'] ."</h5>";
+                echo "<h6 class='card-subtitle mb-2 text-muted'>Localizacion:</h6>";
+                echo "<h6 class='card-subtitle mb-2 text-muted'>" . $row['LOCALIZACION'] .      "</h6>";
                 echo "<h6 class='card-subtitle mb-2 text-muted'>Puntuacion:</h6>";
                 echo "<h6 class='card-subtitle mb-2 text-muted'>" . $row['FIABILIDAD'] .      "</h6>";
                 echo " <p class='card-text'>" . $row['EMAIL'] .      "</p>";
+                
                 echo "<a href='exdelete.php?id_proveedor=" .  $row['ID_PROVEEDOR'] .
                     "' class='btn btn-primary'> Eliminar </a>";
                 echo "</div>";
                 echo "</div>";
-                echo "</div>";
+              }  
+              echo "</div>";
                 echo "</table>";
-
-                
               }
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+elseif($opcion==2){
+  //////////////////////////////////Usuario//////////////////////////////////////////////////////////////////////////
+                    // Me coencto
+                    require_once "config.php";
 
-                    // Close connection
-                    //mysqli_close($link);
-                    ?>
+                    // select
+                    $sql = "SELECT * FROM Usuario";
+                    //nos aseguramos hayan datos
+                    if ($result = $link->query($sql)) {
+                        if ($result->fetchColumn() > 0) { 
+                          echo "<p class='lead'><em>Conoce a nuestros Trabajadores</em></p>";
+                        } else {
+                          echo "<p class='lead'><em>No se tiene registros</em></p>";
+                        }
+                    } else {
+                        echo "ERROR: No se pudo ejecutar $sql. ";
+                    }
+                echo "<a href='ingtrabajador.php?' class='btn btn-primary'> Añadir </a>";
+                echo "<hr>";
+                echo "<div style='background-color:  black; margin:5px ;' class='row row-cols-5 centrar'>";
+                //Se comienzan a colocar los usuarios
+                foreach ($link->query($sql) as $row) {
+                echo "<div style='margin:10px ;' class='card text-center text-white bg-dark mb-3' style='width: 18rem;'>";
+                echo "<img src='images/worker01.jpg' class='card-img-top' alt='...'>";
+                echo "<div class='card-body'>";
+                echo "<h5 class='card-title'>" . $row['NOMBRE'] . " " . $row['APELLIDO1'] . " " . $row['APELLIDO2'] ."</h5>";
+                echo "<h6 class='card-subtitle mb-2 text-muted'>Especialidad:</h6>";
+                echo "<h6 class='card-subtitle mb-2 text-muted'>" . $row['ROLL'] .      "</h6>";
+                echo "<h6 class='card-subtitle mb-2 text-muted'>Puntuacion:</h6>";
+                echo "<h6 class='card-subtitle mb-2 text-muted'>" . $row['PUNTUACION'] .      "</h6>";
+                echo " <p class='card-text'>" . $row['EMAIL'] .      "</p>";
+                echo "<a href='exdelete.php?id_usuario=" .  $row['ID_USUARIO'] .
+                    "' class='btn btn-primary'> Eliminar </a>";
+                echo "</div>";
+                echo "</div>";
+              }  
+              echo "</div>";
+                echo "</table>";
+              }
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+elseif($opcion==3){
+  //////////////////////////////////Usuario//////////////////////////////////////////////////////////////////////////
+                    // Me coencto
+                    require_once "config.php";
+
+                    // select
+                    $sql = "SELECT * FROM Contratista";
+                    //nos aseguramos hayan datos
+                    if ($result = $link->query($sql)) {
+                        if ($result->fetchColumn() > 0) { 
+                          echo "<p class='lead'><em>Conoce a nuestros ecargados de obras</em></p>";
+                        } else {
+                          echo "<p class='lead'><em>No se tiene registros</em></p>";
+                        }
+                    } else {
+                        echo "ERROR: No se pudo ejecutar $sql. ";
+                    }
+                echo "<a href='ingcontratista.php?' class='btn btn-primary'> Añadir </a>";
+                echo "<hr>";
+                echo "<div style='background-color:  black; margin:5px ;' class='row row-cols-5 centrar'>";
+                //Se comienzan a colocar los usuarios
+                foreach ($link->query($sql) as $row) {
+                echo "<div style='margin:10px ;' class='card text-center text-white bg-dark mb-3' style='width: 18rem;'>";
+                echo "<img src='images/worker01.jpg' class='card-img-top' alt='...'>";
+                echo "<div class='card-body'>";
+                echo "<h5 class='card-title'>" . $row['NOMBRE'] . "</h5>";
+                echo "<h6 class='card-subtitle mb-2 text-muted'>Valor:</h6>";
+                echo "<h6 class='card-subtitle mb-2 text-muted'>" . $row['VALOR'] .      "</h6>";
+                echo "<h6 class='card-subtitle mb-2 text-muted'>Puntuacion:</h6>";
+                echo "<h6 class='card-subtitle mb-2 text-muted'>" . $row['PUNTUACION'] .      "</h6>";
+                echo " <p class='card-text'>" . $row['EMAIL'] .      "</p>";
+                echo "<a href='exdelete.php?id_empresa=" .  $row['ID_EMPRESA'] .
+                    "' class='btn btn-primary'> Eliminar </a>";
+                echo "</div>";
+                echo "</div>";
+              }  
+              echo "</div>";
+                echo "</table>";
+              }
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////               
+                    ?>                    
         </div>
     <hr>
 <footer>
