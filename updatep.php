@@ -1,94 +1,87 @@
 <?php
-/////////Nos conectamos
 require_once "config.php";
+$nombre = $email = $fiabilidad = $localizacion = $producto = "";
 
-// Variables a insertar y errores
-$id_proveedor = $nombre = $email = $fiabilidad = $localizacion = $producto = "";
-$id_proveedor_err = $nombre_err = $email_err = $fiabilidad_err = $localizacion_err = $producto_err = "";
+//no permite vacios
+if (isset($_POST["id_proveedor"]) && !empty($_POST["id_proveedor"])) {
+    $id_proveedor = $_POST["id_proveedor"];
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    /////////////VALIDACIONES
-    $input_id_proveedor = trim($_POST["id_proveedor"]);
-    if (empty($input_id_proveedor)) {
-        $id_proveedor_err = "Ingrese un monto de id_proveedor";
-    } elseif (!ctype_digit($input_id_proveedor)) {
-        $id_proveedor_err = "Debe añadir un numero positivo o bien no esta disponible";
-    } else {
-        $id_proveedor = $input_id_proveedor;
-    }
-    
     $input_nombre = trim($_POST["nombre"]);
-    if (empty($input_nombre)) {
-        $nombre_err = "Ingrese un nombre.";
-    } elseif (!filter_var($input_nombre, FILTER_VALIDATE_REGEXP, array("options" => array("regexp" => "/^[a-zA-Z\s]+$/")))) {
-        $nombre_err = "Nombre invalido";
-    } else {
-        $nombre = $input_nombre;
-    }
-
+    $nombre = $input_nombre;
+    
     $input_email = trim($_POST["email"]);
-    if (empty($input_email)) {
-        $email_err = "Ingrese un email";
-    } else {
-        $email = $input_email;
-    }
+    $email = $input_email;
 
     $input_fiabilidad = trim($_POST["fiabilidad"]);
-    if (empty($input_fiabilidad)) {
-        $fiabilidad_err = "Ingrese una fiabilidad valida del 1-5";
-    } elseif (!ctype_digit($input_fiabilidad)) {
-        $fiabilidad_err = "Ingrese una fiabilidad valida del 1-5";
-    } else {
-        $fiabilidad = $input_fiabilidad;
-    }
+    $fiabilidad = $input_fiabilidad;
 
-    $input_localizacion = trim($_POST["localizacion"]);
-    if (empty($input_localizacion)) {
-        $localizacion_err = "Ingrese un localizacion.";
-    } else {
-        $localizacion = $input_localizacion;
-    }
+    $input_localizacion= trim($_POST["localizacion"]);
+    $localizacion = $input_localizacion;
 
     $input_producto= trim($_POST["producto"]);
-    if (empty($input_producto)) {
-        $producto_err = "Ingrese un producto";
-    } else {
-        $producto = $input_producto;
-    }
+    $producto = $input_producto;
 
-    // //Verificacion errores
-    if (empty($id_proveedor_err) && empty($localizacion_err) && empty($producto_err) && empty($nombre_err) && empty($email_err) && empty($fiabilidad_err)) {
-        $sql = "INSERT INTO proveedor (id_proveedor,nombre, email, fiabilidad,localizacion,producto) VALUES (?,?,?,?,?,?)";
+
+        $sql = "UPDATE proveedor SET nombre=?, email=?, fiabilidad=?, localizacion=?, producto=? WHERE id_proveedor=?";
 
         if ($stmt = $link->prepare($sql)) {
+            $stmt->bindParam(1, $param_nombre, PDO::PARAM_STR);
+            $stmt->bindParam(2, $param_email, PDO::PARAM_STR);
+            $stmt->bindParam(3, $param_fiabilidad, PDO::PARAM_STR);
+            $stmt->bindParam(4, $param_localizacion, PDO::PARAM_STR);
+            $stmt->bindParam(5, $param_producto, PDO::PARAM_STR);
+            $stmt->bindParam(6, $param_id_proveedor, PDO::PARAM_INT);
 
-            $stmt->bindParam(1, $param_id_proveedor, PDO::PARAM_STR);
-            $stmt->bindParam(2, $param_nombre, PDO::PARAM_STR);
-            $stmt->bindParam(3, $param_email, PDO::PARAM_STR);
-            $stmt->bindParam(4, $param_fiabilidad, PDO::PARAM_STR);
-            $stmt->bindParam(5, $param_localizacion, PDO::PARAM_STR);
-            $stmt->bindParam(6, $param_producto, PDO::PARAM_STR);
-
-            //Se colocan a los parametros los datos
-            $param_id_proveedor = $id_proveedor;
             $param_nombre = $nombre;
             $param_email = $email;
             $param_fiabilidad = $fiabilidad;
             $param_localizacion = $localizacion;
             $param_producto = $producto;
+            $param_id_proveedor = $id_proveedor;
+
 
             if ($stmt->execute()) {
                 header("location: encontrar.php?opcion=1");
                 exit();
-                echo "INSERTADOS";
             } else {
-                echo "NO INSERTADOS";
+                echo "ERRORRR";
+            }
+        
+
+        $stmt->closeCursor();
+    }
+
+}else {
+    if (isset($_GET["id_proveedor"]) && !empty(trim($_GET["id_proveedor"]))) {
+        $id_proveedor =  trim($_GET["id_proveedor"]);
+        $sql = "SELECT * FROM proveedor WHERE id_proveedor = ?";
+        if ($stmt = $link->prepare($sql)) {
+            $stmt->bindParam(1, $param_id_proveedor, PDO::PARAM_INT);
+            $param_id_proveedor = $id_proveedor;
+            if ($stmt->execute()) {
+                $result = $stmt->fetchAll();
+                if (count($result) == 1) {
+                    $row = $result[0];
+
+                    $nombre = $row["NOMBRE"];
+                    $email = $row["EMAIL"];
+                    $fiabilidad = $row["FIABILIDAD"];
+                    $localizacion = $row["LOCALIZACION"];
+                    $producto = $row["PRODUCTO"];
+                } else {
+                    echo "ER1";
+                }
+            } else {
+                echo "ER2";
             }
         }
         $stmt->closeCursor();
+    } else {
+        echo "ER3";
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -149,55 +142,52 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </header>
     <hr>
     <div class="boxsn">
-    <h1 class="titulossn">Agrega un provedor</h1>
+    <h1 class="titulossn">Actualiza un provedor</h1>
     </div>
     <hr>
-        <div class="container">
+
+        <div class="container" style="color: whitesmoke;">
             <div class="row">
-                <div class="col-md-12">
-                    <div class="centrar" style="color: whitesmoke;">
-                    <p>Ingreso de proveedor</p>
-                    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-                        <div class="form-group <?php echo (!empty($id_proveedor_err)) ? 'has-error' : ''; ?>">
-                            <label>id_proveedor</label>
-                            <input type="text" name="id_proveedor" class="form-control" value="<?php echo $id_proveedor; ?>">
-                            <span class="help-block"><?php echo $id_proveedor_err; ?></span>
-                        </div>
-                        <div class="form-group <?php echo (!empty($nombre_err)) ? 'has-error' : ''; ?>">
+            <div class="col-md-12">
+                <div class="centrar" style="color: whitesmoke;">
+                    </div>
+                    <form action="<?php echo htmlspecialchars(basename($_SERVER['REQUEST_URI'])); ?>" method="post">
+                    
+                    <div class="form-group">
                             <label>Nombre</label>
                             <input type="text" name="nombre" class="form-control" value="<?php echo $nombre; ?>">
-                            <span class="help-block"><?php echo $nombre_err; ?></span>
+                            <span class="help-block"></span>
                         </div>
-                        <div class="form-group <?php echo (!empty($email_err)) ? 'has-error' : ''; ?>">
+                        <div class="form-group">
                             <label>email</label>
                             <textarea name="email" class="form-control"><?php echo $email; ?></textarea>
-                            <span class="help-block"><?php echo $email_err; ?></span>
+                            <span class="help-block"></span>
                         </div>
-                        <div class="form-group <?php echo (!empty($fiabilidad_err)) ? 'has-error' : ''; ?>">
+                        <div class="">
                             <label>fiabilidad</label>
                             <input type="text" name="fiabilidad" class="form-control" value="<?php echo $fiabilidad; ?>">
-                            <span class="help-block"><?php echo $fiabilidad_err; ?></span>
+                            <span class="help-block"></span>
                         </div>
-                        <div class="form-group <?php echo (!empty($localizacion_err)) ? 'has-error' : ''; ?>">
+
+                        <div class="">
                             <label>localizacion</label>
                             <input type="text" name="localizacion" class="form-control" value="<?php echo $localizacion; ?>">
-                            <span class="help-block"><?php echo $localizacion_err; ?></span>
+                            <span class="help-block"></span>
                         </div>
-                        <div class="form-group <?php echo (!empty($producto_err)) ? 'has-error' : ''; ?>">
+                        <div class="">
                             <label>producto</label>
                             <input type="text" name="producto" class="form-control" value="<?php echo $producto; ?>">
-                            <span class="help-block"><?php echo $producto_err; ?></span>
+                            <span class="help-block"></span>
                         </div>
                         <br>
-                        <input type="submit" class="btn btn-primary" value="Crear">
+
+                        <input type="hidden" name="id_proveedor" value="<?php echo $id_proveedor; ?>" />
+                        <input type="submit" class="btn btn-primary" value="Actualizar">
                         <a href="encontrar.php?opcion=1" class="btn btn-primary">Cancelar</a>
                     </form>
-                    </div>
                 </div>
             </div>
         </div>
-
-
     <hr>
 <footer>
 <div class="footer-cont">

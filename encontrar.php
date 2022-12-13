@@ -97,8 +97,12 @@ if($opcion==1){
                 echo "<h6 class='card-subtitle mb-2 text-muted'>" . $row['FIABILIDAD'] .      "</h6>";
                 echo " <p class='card-text'>" . $row['EMAIL'] .      "</p>";
                 
-                echo "<a href='exdelete.php?id_proveedor=" .  $row['ID_PROVEEDOR'] .
+                echo "<a href='deletep.php?id_proveedor=" .  $row['ID_PROVEEDOR'] .
                     "' class='btn btn-primary'> Eliminar </a>";
+                echo "  ";
+                echo "<a href='updatep.php?id_proveedor=" .  $row['ID_PROVEEDOR'] .
+                    "' class='btn btn-primary'> actualizar </a>";
+
                 echo "</div>";
                 echo "</div>";
               }  
@@ -137,8 +141,11 @@ elseif($opcion==2){
                 echo "<h6 class='card-subtitle mb-2 text-muted'>Puntuacion:</h6>";
                 echo "<h6 class='card-subtitle mb-2 text-muted'>" . $row['PUNTUACION'] .      "</h6>";
                 echo " <p class='card-text'>" . $row['EMAIL'] .      "</p>";
-                echo "<a href='exdelete.php?id_usuario=" .  $row['ID_USUARIO'] .
+                echo "<a href='deleteu.php?id_usuario=" .  $row['ID_USUARIO'] .
                     "' class='btn btn-primary'> Eliminar </a>";
+                echo "  ";
+                echo "<a href='updateu.php?id_usuario=" .  $row['ID_USUARIO'] .
+                        "' class='btn btn-primary'> actualizar </a>";
                 echo "</div>";
                 echo "</div>";
               }  
@@ -177,8 +184,11 @@ elseif($opcion==3){
                 echo "<h6 class='card-subtitle mb-2 text-muted'>Puntuacion:</h6>";
                 echo "<h6 class='card-subtitle mb-2 text-muted'>" . $row['PUNTUACION'] .      "</h6>";
                 echo " <p class='card-text'>" . $row['EMAIL'] .      "</p>";
-                echo "<a href='exdelete.php?id_empresa=" .  $row['ID_EMPRESA'] .
+                echo "<a href='deletec.php?id_empresa=" .  $row['ID_EMPRESA'] .
                     "' class='btn btn-primary'> Eliminar </a>";
+                echo "  ";
+                echo "<a href='updatec.php?id_empresa=" .  $row['ID_EMPRESA'] .
+                            "' class='btn btn-primary'> actualizar </a>";
                 echo "</div>";
                 echo "</div>";
               }  

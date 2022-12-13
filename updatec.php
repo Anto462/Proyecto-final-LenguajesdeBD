@@ -1,94 +1,104 @@
 <?php
-/////////Nos conectamos
 require_once "config.php";
+$nombre = $email = $valor = $id_usuario = $contrasena = $puntacion = $id_proveedor = "";
 
-// Variables a insertar y errores
-$id_proveedor = $nombre = $email = $fiabilidad = $localizacion = $producto = "";
-$id_proveedor_err = $nombre_err = $email_err = $fiabilidad_err = $localizacion_err = $producto_err = "";
+//no permite vacios
+if (isset($_POST["id_empresa"]) && !empty($_POST["id_empresa"])) {
+    $id_empresa = $_POST["id_empresa"];
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    /////////////VALIDACIONES
-    $input_id_proveedor = trim($_POST["id_proveedor"]);
-    if (empty($input_id_proveedor)) {
-        $id_proveedor_err = "Ingrese un monto de id_proveedor";
-    } elseif (!ctype_digit($input_id_proveedor)) {
-        $id_proveedor_err = "Debe añadir un numero positivo o bien no esta disponible";
-    } else {
-        $id_proveedor = $input_id_proveedor;
-    }
-    
     $input_nombre = trim($_POST["nombre"]);
-    if (empty($input_nombre)) {
-        $nombre_err = "Ingrese un nombre.";
-    } elseif (!filter_var($input_nombre, FILTER_VALIDATE_REGEXP, array("options" => array("regexp" => "/^[a-zA-Z\s]+$/")))) {
-        $nombre_err = "Nombre invalido";
-    } else {
-        $nombre = $input_nombre;
-    }
-
+    $nombre = $input_nombre;
+    
     $input_email = trim($_POST["email"]);
-    if (empty($input_email)) {
-        $email_err = "Ingrese un email";
-    } else {
-        $email = $input_email;
-    }
+    $email = $input_email;
 
-    $input_fiabilidad = trim($_POST["fiabilidad"]);
-    if (empty($input_fiabilidad)) {
-        $fiabilidad_err = "Ingrese una fiabilidad valida del 1-5";
-    } elseif (!ctype_digit($input_fiabilidad)) {
-        $fiabilidad_err = "Ingrese una fiabilidad valida del 1-5";
-    } else {
-        $fiabilidad = $input_fiabilidad;
-    }
+    $input_valor = trim($_POST["valor"]);
+    $valor = $input_valor;
 
-    $input_localizacion = trim($_POST["localizacion"]);
-    if (empty($input_localizacion)) {
-        $localizacion_err = "Ingrese un localizacion.";
-    } else {
-        $localizacion = $input_localizacion;
-    }
+    $input_id_usuario= trim($_POST["id_usuario"]);
+    $id_usuario = $input_id_usuario;
+    
+    $input_contrasena= trim($_POST["contrasena"]);
+    $contrasena = $input_contrasena;
 
-    $input_producto= trim($_POST["producto"]);
-    if (empty($input_producto)) {
-        $producto_err = "Ingrese un producto";
-    } else {
-        $producto = $input_producto;
-    }
+    $input_email= trim($_POST["email"]);
+    $email = $input_email;
 
-    // //Verificacion errores
-    if (empty($id_proveedor_err) && empty($localizacion_err) && empty($producto_err) && empty($nombre_err) && empty($email_err) && empty($fiabilidad_err)) {
-        $sql = "INSERT INTO proveedor (id_proveedor,nombre, email, fiabilidad,localizacion,producto) VALUES (?,?,?,?,?,?)";
+    $input_puntacion= trim($_POST["puntacion"]);
+    $puntacion = $input_puntacion;
+
+    $input_id_proveedor= trim($_POST["id_proveedor"]);
+    $id_proveedor = $input_id_proveedor;
+
+
+        $sql = "UPDATE contratista SET nombre=?, puntacion=?, email=?, contrasena=?, valor=?, id_proveedor=?, id_usuario=? WHERE id_empresa=?";
 
         if ($stmt = $link->prepare($sql)) {
-
-            $stmt->bindParam(1, $param_id_proveedor, PDO::PARAM_STR);
-            $stmt->bindParam(2, $param_nombre, PDO::PARAM_STR);
+            $stmt->bindParam(1, $param_nombre, PDO::PARAM_STR);
+            $stmt->bindParam(2, $param_puntacion, PDO::PARAM_STR);
             $stmt->bindParam(3, $param_email, PDO::PARAM_STR);
-            $stmt->bindParam(4, $param_fiabilidad, PDO::PARAM_STR);
-            $stmt->bindParam(5, $param_localizacion, PDO::PARAM_STR);
-            $stmt->bindParam(6, $param_producto, PDO::PARAM_STR);
+            $stmt->bindParam(4, $param_contrasena, PDO::PARAM_STR);
+            $stmt->bindParam(5, $param_valor, PDO::PARAM_STR);
+            $stmt->bindParam(6, $param_id_proveedor, PDO::PARAM_STR);
+            $stmt->bindParam(7, $param_id_usuario, PDO::PARAM_STR);         
 
-            //Se colocan a los parametros los datos
-            $param_id_proveedor = $id_proveedor;
+            $stmt->bindParam(8, $param_id_empresa, PDO::PARAM_INT);
+
             $param_nombre = $nombre;
+            $param_puntacion = $puntacion;
             $param_email = $email;
-            $param_fiabilidad = $fiabilidad;
-            $param_localizacion = $localizacion;
-            $param_producto = $producto;
+            $param_contrasena = $contrasena;
+            $param_valor = $valor;
+            $param_id_proveedor = $id_proveedor;
+            $param_id_usuario = $id_usuario;
+
+            $param_id_empresa = $id_empresa;
+
 
             if ($stmt->execute()) {
-                header("location: encontrar.php?opcion=1");
+                header("location: encontrar.php?opcion=3");
                 exit();
-                echo "INSERTADOS";
             } else {
-                echo "NO INSERTADOS";
+                echo "ERRORRR";
+            }
+        
+
+        $stmt->closeCursor();
+    }
+
+}else {
+    if (isset($_GET["id_empresa"]) && !empty(trim($_GET["id_empresa"]))) {
+        $id_empresa =  trim($_GET["id_empresa"]);
+        $sql = "SELECT * FROM contratista WHERE id_empresa = ?";
+        if ($stmt = $link->prepare($sql)) {
+            $stmt->bindParam(1, $param_id_empresa, PDO::PARAM_INT);
+            $param_id_empresa = $id_empresa;
+            if ($stmt->execute()) {
+                $result = $stmt->fetchAll();
+                if (count($result) == 1) {
+                    $row = $result[0];
+
+                    $nombre = $row["NOMBRE"];
+                    $puntacion = $row["PUNTACION"];
+                    $email = $row["EMAIL"];
+                    $valor = $row["VALOR"];
+                    $contrasena = $row["CONTRASENA"];
+                    $id_proveedor = $row["ID_PROVEEDOR"];
+                    $id_usuario = $row["ID_USUARIO"]; 
+                } else {
+                    echo "ER1";
+                }
+            } else {
+                echo "ER2";
             }
         }
         $stmt->closeCursor();
+    } else {
+        echo "ER3";
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -149,55 +159,67 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </header>
     <hr>
     <div class="boxsn">
-    <h1 class="titulossn">Agrega un provedor</h1>
+    <h1 class="titulossn">Actualiza un provedor</h1>
     </div>
     <hr>
-        <div class="container">
+
+        <div class="container" style="color: whitesmoke;">
             <div class="row">
-                <div class="col-md-12">
-                    <div class="centrar" style="color: whitesmoke;">
-                    <p>Ingreso de proveedor</p>
-                    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-                        <div class="form-group <?php echo (!empty($id_proveedor_err)) ? 'has-error' : ''; ?>">
-                            <label>id_proveedor</label>
-                            <input type="text" name="id_proveedor" class="form-control" value="<?php echo $id_proveedor; ?>">
-                            <span class="help-block"><?php echo $id_proveedor_err; ?></span>
-                        </div>
-                        <div class="form-group <?php echo (!empty($nombre_err)) ? 'has-error' : ''; ?>">
+            <div class="col-md-12">
+                <div class="centrar" style="color: whitesmoke;">
+                    </div>
+                    <form action="<?php echo htmlspecialchars(basename($_SERVER['REQUEST_URI'])); ?>" method="post">
+                    
+                    <div class="form-group">
                             <label>Nombre</label>
                             <input type="text" name="nombre" class="form-control" value="<?php echo $nombre; ?>">
-                            <span class="help-block"><?php echo $nombre_err; ?></span>
-                        </div>
-                        <div class="form-group <?php echo (!empty($email_err)) ? 'has-error' : ''; ?>">
-                            <label>email</label>
-                            <textarea name="email" class="form-control"><?php echo $email; ?></textarea>
-                            <span class="help-block"><?php echo $email_err; ?></span>
-                        </div>
-                        <div class="form-group <?php echo (!empty($fiabilidad_err)) ? 'has-error' : ''; ?>">
-                            <label>fiabilidad</label>
-                            <input type="text" name="fiabilidad" class="form-control" value="<?php echo $fiabilidad; ?>">
-                            <span class="help-block"><?php echo $fiabilidad_err; ?></span>
-                        </div>
-                        <div class="form-group <?php echo (!empty($localizacion_err)) ? 'has-error' : ''; ?>">
-                            <label>localizacion</label>
-                            <input type="text" name="localizacion" class="form-control" value="<?php echo $localizacion; ?>">
-                            <span class="help-block"><?php echo $localizacion_err; ?></span>
-                        </div>
-                        <div class="form-group <?php echo (!empty($producto_err)) ? 'has-error' : ''; ?>">
-                            <label>producto</label>
-                            <input type="text" name="producto" class="form-control" value="<?php echo $producto; ?>">
-                            <span class="help-block"><?php echo $producto_err; ?></span>
+                            <span class="help-block"></span>
                         </div>
                         <br>
-                        <input type="submit" class="btn btn-primary" value="Crear">
-                        <a href="encontrar.php?opcion=1" class="btn btn-primary">Cancelar</a>
+
+                        <div class="">
+                            <label>contrasena</label>
+                            <input type="text" name="contrasena" class="form-control" value="<?php echo $contrasena; ?>">
+                            <span class="help-block"></span>
+                        </div>
+                        <br>
+                        <div class="">
+                            <label>id_proveedor</label>
+                            <input type="text" name="id_proveedor" class="form-control" value="<?php echo $id_proveedor; ?>">
+                            <span class="help-block"></span>
+                        </div>
+                        <br>
+                        <div class="">
+                            <label>email</label>
+                            <input type="text" name="email" class="form-control" value="<?php echo $email; ?>">
+                            <span class="help-block"></span>
+                        </div>
+                        <br>
+                        <div class="">
+                            <label>puntacion</label>
+                            <input type="text" name="puntacion" class="form-control" value="<?php echo $puntacion; ?>">
+                            <span class="help-block"></span>
+                        </div>
+                        <br>
+                        <div class="">
+                            <label>valor</label>
+                            <input type="text" name="valor" class="form-control" value="<?php echo $valor; ?>">
+                            <span class="help-block"></span>
+                        </div>
+                        <div class="">
+                            <label>id_usuario</label>
+                            <input type="text" name="id_usuario" class="form-control" value="<?php echo $id_usuario; ?>">
+                            <span class="help-block"></span>
+                        </div>
+                        <br>
+
+                        <input type="hidden" name="id_empresa" value="<?php echo $id_empresa; ?>" />
+                        <input type="submit" class="btn btn-primary" value="Actualizar">
+                        <a href="encontrar.php?opcion=3" class="btn btn-primary">Cancelar</a>
                     </form>
-                    </div>
                 </div>
             </div>
         </div>
-
-
     <hr>
 <footer>
 <div class="footer-cont">

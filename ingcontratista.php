@@ -75,7 +75,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     if (empty($id_empresa_err) && empty($contrasena_err) && empty($valor_err) && empty($nombre_err) && empty($puntacion_err) && empty($email_err) && empty($id_proveedor_err) && empty($id_usuario_err))  {
         
-        $sql = "INSERT INTO proveedor (id_empresa,nombre, puntacion, email,contrasena,valor,id_proveedor,id_usuario) VALUES (?,?,?,?,?,?,?,?)";
+        $sql = "INSERT INTO Contratista (id_empresa,nombre, puntacion, email,contrasena,valor,id_proveedor,id_usuario) VALUES (?,?,?,?,?,?,?,?)";
 
         if ($stmt = $link->prepare($sql)) {
 
