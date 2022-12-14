@@ -71,7 +71,7 @@ if($opcion==1){
                     require_once "config.php";
 
                     // select
-                    $sql = "SELECT * FROM proveedor";
+                    $sql = "SELECT * FROM muestraprov";
                     //nos aseguramos hayan datos
                     if ($result = $link->query($sql)) {
                         if ($result->fetchColumn() > 0) { 
@@ -88,7 +88,7 @@ if($opcion==1){
                 //Se comienzan a colocar los usuarios
                 foreach ($link->query($sql) as $row) {
                 echo "<div style='margin:10px ;' class='card text-center text-white bg-dark mb-3' style='width: 18rem;'>";
-                echo "<img src='images/worker01.jpg' class='card-img-top' alt='...'>";
+                echo "<img src='images/provider1.jpg' class='card-img-top' alt='...'>";
                 echo "<div class='card-body'>";
                 echo "<h5 class='card-title'>" . $row['NOMBRE'] . "-" . $row['PRODUCTO'] ."</h5>";
                 echo "<h6 class='card-subtitle mb-2 text-muted'>Localizacion:</h6>";
@@ -116,7 +116,7 @@ elseif($opcion==2){
                     require_once "config.php";
 
                     // select
-                    $sql = "SELECT * FROM Usuario";
+                    $sql = "SELECT * FROM muestrausers";
                     //nos aseguramos hayan datos
                     if ($result = $link->query($sql)) {
                         if ($result->fetchColumn() > 0) { 
@@ -159,7 +159,7 @@ elseif($opcion==3){
                     require_once "config.php";
 
                     // select
-                    $sql = "SELECT * FROM Contratista";
+                    $sql = "SELECT * FROM muestracont";
                     //nos aseguramos hayan datos
                     if ($result = $link->query($sql)) {
                         if ($result->fetchColumn() > 0) { 
@@ -176,7 +176,7 @@ elseif($opcion==3){
                 //Se comienzan a colocar los usuarios
                 foreach ($link->query($sql) as $row) {
                 echo "<div style='margin:10px ;' class='card text-center text-white bg-dark mb-3' style='width: 18rem;'>";
-                echo "<img src='images/worker01.jpg' class='card-img-top' alt='...'>";
+                echo "<img src='images/contratis2.jpg' class='card-img-top' alt='...'>";
                 echo "<div class='card-body'>";
                 echo "<h5 class='card-title'>" . $row['NOMBRE'] . "</h5>";
                 echo "<h6 class='card-subtitle mb-2 text-muted'>Valor:</h6>";
