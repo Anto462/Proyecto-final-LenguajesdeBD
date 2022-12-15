@@ -1,0 +1,258 @@
+SHOW USER;
+ALTER SESSION SET "_ORACLE_SCRIPT"=TRUE;
+
+CREATE USER PF_CM
+IDENTIFIED BY ORACLE;
+
+create table PF_CM.proveedor(
+id_proveedor NUMBER GENERATED ALWAYS AS IDENTITY not null
+,nombre varchar(25)
+,email varchar (25)
+,fiabilidad number(3)
+,localizacion varchar(25)
+,producto varchar (25)
+,primary key (id_proveedor)
+);
+
+create table PF_CM.Usuario(
+id_usuario NUMBER GENERATED ALWAYS AS IDENTITY not null
+,nombre varchar(25)
+,apellido1 varchar(25)
+,apellido2 varchar(25)
+,rol varchar(25)
+,contrasena varchar(25)
+,email varchar(25)
+,puntuacion number(3)
+,id_proveedor number not null
+,primary key (id_usuario)
+,FOREIGN KEY (id_proveedor) REFERENCES PF_CM.proveedor(id_proveedor) 
+);
+
+
+create table PF_CM.Contratista(
+id_empresa NUMBER GENERATED ALWAYS AS IDENTITY not null
+,nombre varchar(25)
+,puntacion number(1)
+,email varchar (25)
+,contrasena varchar(25)
+,valor number(3)
+,id_proveedor number not null
+,id_usuario number not null
+,primary key (id_empresa)
+,FOREIGN KEY (id_proveedor) REFERENCES PF_CM.proveedor(id_proveedor)
+,FOREIGN KEY (id_usuario) REFERENCES PF_CM.Usuario(id_usuario) 
+);
+
+create table PF_CM.Anteproyecto(
+id_ante_proyecto NUMBER GENERATED ALWAYS AS IDENTITY
+,Localizacion varchar(100)
+,descripcion varchar(250)
+,presupuesto  number(10,2)
+,duracionaprox varchar(100)
+,tipo varchar (100)
+,id_usuario number not null
+,id_empresa number not null
+,primary key (id_ante_proyecto)
+,FOREIGN KEY (id_usuario) REFERENCES PF_CM.Usuario (id_usuario)
+,FOREIGN KEY (id_empresa) REFERENCES PF_CM.Contratista (id_empresa)
+);
+
+create table PF_CM.proyecto (
+id_proyecto NUMBER GENERATED ALWAYS AS IDENTITY
+,descripcion varchar(250)
+,duracion varchar(100)
+,tipo varchar (100)
+,localizacion varchar (100)
+,valor number(10,2)
+,planofinal varchar (25)
+,id_ante_proyecto number not null
+,primary key  (id_proyecto)
+,FOREIGN KEY (id_ante_proyecto) REFERENCES PF_CM.Anteproyecto(id_ante_proyecto)
+);
+
+CREATE OR REPLACE TRIGGER TRG_ANTEPROYECTOS
+AFTER INSERT ON PF_CM.Anteproyecto
+DECLARE
+    VAR_IDANTEPROYECTO NUMBER(10);
+    VAR_LOCALIZACION VARCHAR2(100);
+    VAR_DESCRIPCION VARCHAR2(100);
+    VAR_TIPO VARCHAR2(100);
+    VAR_DURACION VARCHAR2(100);
+    
+BEGIN
+    SELECT id_ante_proyecto INTO VAR_IDANTEPROYECTO FROM PF_CM.Anteproyecto;
+    SELECT Localizacion INTO VAR_LOCALIZACION FROM PF_CM.Anteproyecto;
+    SELECT descripcion INTO VAR_DESCRIPCION FROM PF_CM.Anteproyecto;
+    SELECT descripcion INTO VAR_DESCRIPCION FROM PF_CM.Anteproyecto;
+    SELECT duracionaprox INTO VAR_DURACION FROM PF_CM.Anteproyecto;
+    SELECT tipo INTO VAR_TIPO FROM PF_CM.Anteproyecto;
+    INSERT INTO PF_CM.Proyecto( descripcion, duracion, tipo, localizacion, valor, planofinal, id_ante_proyecto)
+    VALUES              (VAR_DESCRIPCION, VAR_DURACION, VAR_TIPO, VAR_LOCALIZACION, 0, 'Pendiente', VAR_IDANTEPROYECTO);
+END;
+
+INSERT INTO PF_CM.PROVEEDOR (nombre, email, fiabilidad, localizacion, producto) VALUES ('Materiales Jota', 'mjota@gmail.com', 75, 'Heredia', 'Materiales construccion');
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntacion, id_proveedor) VALUES ('Jose', 'Rodriguez', 'Jara', 'Servicios', '123', 'jose@gmail.com', 100, 1);
+INSERT INTO PF_CM.CONTRATISTA (nombre, puntacion, email, contrasena, valor, id_proveedor, id_usuario) VALUES ('Constructora Izq SA', 5, 'cizq@gmail.com', '123', 123, 1,  1);
+INSERT INTO PF_CM.ANTEPROYECTO (Localizacion, descripcion, presupuesto, duracionaprox, tipo, id_usuario, id_empresa) VALUES ('Heredia', 'Venta de materiales de construcción.', 5000000.00, '8 meses', 'Presupuesto', 1, 1);
+
+ALTER USER PF_CM quota 100M on USERS;
+
+select * from PF_CM.contratista;
+select * from PF_CM.proveedor;
+select * from PF_CM.usuario;
+select * from PF_CM.ANTEPROYECTO;
+select * from PF_CM.PROYECTO;
+
+create table PF_CM.REG_FIABILIDAD(
+    codigo_registro  NUMBER GENERATED ALWAYS AS IDENTITY,
+    codigo_proveedor NUMBER(10) NOT NULL,
+    promedio_anterior NUMBER(3) NOT NULL,
+    promedio_actualizado NUMBER(3) NOT NULL,
+    fecha DATE
+);
+
+CREATE OR REPLACE TRIGGER TRG_PROYECTO
+AFTER UPDATE ON PF_CM.PROYECTO
+FOR EACH ROW
+WHEN (NEW.VALOR != 0)
+    BEGIN
+    UPDATE PF_CM.PROYECTO SET PLANOFINAL = 'APROBADOS';
+END;
+
+---- Este esta incompleto
+
+CREATE OR REPLACE TRIGGER TRG_FIABILIDAD_PROVEEDOR
+AFTER UPDATE ON PF_CM.PROVEEDOR
+FOR EACH ROW
+DECLARE
+    VAR_COD_PROVEEDOR NUMBER(10);
+    VAR_COD_PROMEDIO NUMBER(3,2);
+    BEGIN
+    SELECT id_proveedor INTO VAR_COD_PROVEEDOR FROM PF_CM.proveedor;
+    SELECT id_proveedor INTO VAR_COD_PROMEDIO FROM PF_CM.proveedor;
+    INSERT INTO PF_CM.REG_FIABILIDAD ( codigo_proveedor, promedio_anterior, promedio_actualizado, fecha )
+    VALUES              (VAR_CODIGO, :OLD.fiabilidad, :NEW.fiabilidad, SYSDATE);
+END;
+
+
+
+----- INSERCION DE DATOS
+
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Primitiva','Morcillo','Galindo','Comprador','123','Primitiva.2@gmail.com',100,1);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Gil','Martin','Peñas','Comprador','123','Gil.3@gmail.com',100,6);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Eric','Segura','Garay','Comprador','123','Eric.4@gmail.com',100,9);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Jose','Ignacio','Recio','Comprador','123','Jose.5@gmail.com',100,4);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Herberto','Rodriguez','Vergara','Comprador','123','Herberto.6@gmail.com',100,8);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Fabricio','Muñoz','Casal','Comprador','123','Fabricio.7@gmail.com',100,9);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Fabiana','Escriva','Llobet','Comprador','123','Fabiana.8@gmail.com',100,9);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Rosalva','Bonilla','Perello-Ojeda','Comprador','123','Rosalva.9@gmail.com',100,2);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Marciano','Nuñez','Lozano-Oliver','Comprador','123','Marciano.10@gmail.com',100,1);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Lucho','Mayoral','Maria','Comprador','123','Lucho.11@gmail.com',100,9);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Salome','Rodriguez','Muñiz','Comprador','123','Salome.12@gmail.com',100,3);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Tomas','Mari','Cerda-Priego','Comprador','123','Tomas.13@gmail.com',100,6);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Nazario','Blazquez','Benavent','Comprador','123','Nazario.14@gmail.com',100,1);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Fito','Aroca-Puerta','Batlle','Comprador','123','Fito.15@gmail.com',100,2);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Pacifica','Rodriguez','Martin','Comprador','123','Pacifica.16@gmail.com',100,1);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Brunilda','Figuerola','Valencia','Comprador','123','Brunilda.17@gmail.com',100,8);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Ariadna','Arce','Tirado','Comprador','123','Ariadna.18@gmail.com',100,1);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Chucho','Barrios','Amo','Comprador','123','Chucho.19@gmail.com',100,10);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Bernardino','Bayona','Torrecilla','Comprador','123','Bernardino.20@gmail.com',100,9);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Ciriaco','de','Manuel','Comprador','123','Ciriaco.21@gmail.com',100,2);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Candela','Villena-Noguera','Cañellas','Comprador','123','Candela.22@gmail.com',100,9);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Hipolito','Oliver','Montoya','Comprador','123','Hipolito.23@gmail.com',100,9);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Tadeo','Soler','Parra','Comprador','123','Tadeo.24@gmail.com',100,5);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Leire','Baez','Gisbert-Vilaplana','Comprador','123','Leire.25@gmail.com',100,7);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Fernanda','Heredia','Palomares','Comprador','123','Fernanda.26@gmail.com',100,10);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Serafina','Rio','Espinosa','Comprador','123','Serafina.27@gmail.com',100,8);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Artemio','Galindo','Gilabert','Comprador','123','Artemio.28@gmail.com',100,4);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Marisela','Peñas','Yuste','Comprador','123','Marisela.29@gmail.com',100,7);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Javier','Garay','Mayo','Comprador','123','Javier.30@gmail.com',100,6);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Salud','Recio','Huertas','Comprador','123','Salud.31@gmail.com',100,4);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Mamen','Vergara','Gras','Comprador','123','Mamen.32@gmail.com',100,6);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Angelino','Casal','Acedo','Comprador','123','Angelino.33@gmail.com',100,4);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Inocencio','Llobet','Montalban','Comprador','123','Inocencio.34@gmail.com',100,9);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Lino','Perello-Ojeda','Bermejo','Comprador','123','Lino.35@gmail.com',100,10);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Rosario','Lozano-Oliver','Arranz','Comprador','123','Rosario.36@gmail.com',100,7);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Jose','Maria','Lobo','Comprador','123','Jose.37@gmail.com',100,6);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Hernan','Muñiz','Antunez','Comprador','123','Hernan.38@gmail.com',100,3);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Cayetano','Cerda-Priego','Paz','Comprador','123','Cayetano.39@gmail.com',100,8);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Manuela','Benavent','Oliva-Tirado','Comprador','123','Manuela.40@gmail.com',100,5);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Guadalupe','Batlle','Xiomara','Comprador','123','Guadalupe.41@gmail.com',100,1);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Luisina','Martin','Serna','Comprador','123','Luisina.42@gmail.com',100,8);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Rosalia','Valencia','Balaguer','Comprador','123','Rosalia.43@gmail.com',100,10);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Hilario','Tirado','Acosta','Comprador','123','Hilario.44@gmail.com',100,9);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Caridad','Amo','Carnero','Comprador','123','Caridad.45@gmail.com',100,10);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Nestor','Torrecilla','Batalla','Comprador','123','Nestor.46@gmail.com',100,1);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Juan','Manuel','Porras','Comprador','123','Juan.47@gmail.com',100,2);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Eloisa','Cañellas','Alsina','Comprador','123','Eloisa.48@gmail.com',100,9);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Alba','Montoya','Ferran','Comprador','123','Alba.49@gmail.com',100,3);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Trini','Parra','Cobos','Comprador','123','Trini.50@gmail.com',100,4);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Barbara','Gisbert-Vilaplana','Barrios','Comprador','123','Barbara.51@gmail.com',100,1);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Modesta','Palomares','Larrea','Comprador','123','Modesta.52@gmail.com',100,1);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Macaria','Espinosa','Serra','Comprador','123','Macaria.53@gmail.com',100,2);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Ivan','Gilabert','Begoña','Comprador','123','Ivan.54@gmail.com',100,6);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Marcela','Yuste','Pedro','Comprador','123','Marcela.55@gmail.com',100,3);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Carmela','Mayo','Sosa','Comprador','123','Carmela.56@gmail.com',100,6);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Tatiana','Huertas','Bas','Comprador','123','Tatiana.57@gmail.com',100,8);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Eligio','Gras','Collado','Comprador','123','Eligio.58@gmail.com',100,4);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Maximino','Acedo','Salvà','Comprador','123','Maximino.59@gmail.com',100,1);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Cristina','Montalban','Porcel','Comprador','123','Cristina.60@gmail.com',100,7);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Anita','Bermejo','Guardiola','Comprador','123','Anita.61@gmail.com',100,7);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Goyo','Arranz','Morcillo','Comprador','123','Goyo.62@gmail.com',100,7);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Marcio','Lobo','Martin','Comprador','123','Marcio.63@gmail.com',100,4);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Roman','Antunez','Segura','Comprador','123','Roman.64@gmail.com',100,8);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Adoracion','Paz','Ignacio','Comprador','123','Adoracion.65@gmail.com',100,1);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Juanito','Oliva-Tirado','Rodriguez','Comprador','123','Juanito.66@gmail.com',100,5);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Nerea','Xiomara','Muñoz','Comprador','123','Nerea.67@gmail.com',100,1);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Ascension','Serna','Escriva','Comprador','123','Ascension.68@gmail.com',100,3);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Eugenia','Balaguer','Bonilla','Comprador','123','Eugenia.69@gmail.com',100,1);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Rosalva','Acosta','Nuñez','Comprador','123','Rosalva.70@gmail.com',100,8);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Marcelino','Carnero','Mayoral','Comprador','123','Marcelino.71@gmail.com',100,4);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Noe','Batalla','Rodriguez','Comprador','123','Noe.72@gmail.com',100,9);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Blas','Porras','Mari','Comprador','123','Blas.73@gmail.com',100,9);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Balduino','Alsina','Blazquez','Comprador','123','Balduino.74@gmail.com',100,7);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Andrea','Ferran','Aroca-Puerta','Comprador','123','Andrea.75@gmail.com',100,2);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Gabino','Cobos','Rodriguez','Comprador','123','Gabino.76@gmail.com',100,7);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Carlito','Barrios','Figuerola','Comprador','123','Carlito.77@gmail.com',100,7);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Patricio','Larrea','Arce','Comprador','123','Patricio.78@gmail.com',100,4);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Eleuterio','Serra','Barrios','Comprador','123','Eleuterio.79@gmail.com',100,10);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Ale','Begoña','Bayona','Comprador','123','Ale.80@gmail.com',100,9);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Chita','Pedro','de','Comprador','123','Chita.81@gmail.com',100,6);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Cosme','Sosa','Villena-Noguera','Comprador','123','Cosme.82@gmail.com',100,4);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Maribel','Bas','Oliver','Comprador','123','Maribel.83@gmail.com',100,10);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Matilde','Collado','Soler','Comprador','123','Matilde.84@gmail.com',100,1);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Bartolome','Salvà','Baez','Comprador','123','Bartolome.85@gmail.com',100,7);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Luisina','Porcel','Heredia','Comprador','123','Luisina.86@gmail.com',100,7);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Teresa','Guardiola','Rio','Comprador','123','Teresa.87@gmail.com',100,3);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Primitiva','Morcillo','Galindo','Comprador','123','Primitiva.88@gmail.com',100,8);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Gil','Martin','Peñas','Comprador','123','Gil.89@gmail.com',100,2);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Eric','Segura','Garay','Comprador','123','Eric.90@gmail.com',100,9);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Jose','Ignacio','Recio','Comprador','123','Jose.91@gmail.com',100,10);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Herberto','Rodriguez','Vergara','Comprador','123','Herberto.92@gmail.com',100,4);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Fabricio','Muñoz','Casal','Comprador','123','Fabricio.93@gmail.com',100,8);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Fabiana','Escriva','Guardiola','Comprador','123','Fabiana.94@gmail.com',100,3);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Rosalva','Bonilla','Morcillo','Comprador','123','Rosalva.95@gmail.com',100,10);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Marciano','Nuñez','Martin','Comprador','123','Marciano.96@gmail.com',100,1);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Lucho','Mayoral','Segura','Comprador','123','Lucho.97@gmail.com',100,8);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Salome','Rodriguez','Ignacio','Comprador','123','Salome.98@gmail.com',100,4);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Tomas','Mari','Rodriguez','Comprador','123','Tomas.99@gmail.com',100,2);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Nazario','Blazquez','Muñoz','Comprador','123','Nazario.100@gmail.com',100,6);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Fito','Aroca-Puerta','Escriva','Comprador','123','Fito.101@gmail.com',100,7);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Pacifica','Rodriguez','Bonilla','Comprador','123','Pacifica.102@gmail.com',100,5);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Brunilda','Figuerola','Nuñez','Comprador','123','Brunilda.103@gmail.com',100,3);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Ariadna','Arce','Mayoral','Comprador','123','Ariadna.104@gmail.com',100,10);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Chucho','Barrios','Rodriguez','Comprador','123','Chucho.105@gmail.com',100,7);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Bernardino','Bayona','Mari','Comprador','123','Bernardino.106@gmail.com',100,8);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Ciriaco','de','Blazquez','Comprador','123','Ciriaco.107@gmail.com',100,6);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Candela','Villena-Noguera','Aroca-Puerta','Comprador','123','Candela.108@gmail.com',100,5);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Hipolito','Oliver','Rodriguez','Comprador','123','Hipolito.109@gmail.com',100,10);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Tadeo','Soler','Figuerola','Comprador','123','Tadeo.110@gmail.com',100,1);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Leire','Baez','Arce','Comprador','123','Leire.111@gmail.com',100,4);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Fernanda','Heredia','Barrios','Comprador','123','Fernanda.112@gmail.com',100,3);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Serafina','Rio','Bayona','Comprador','123','Serafina.113@gmail.com',100,8);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Artemio','Galindo','de','Comprador','123','Artemio.114@gmail.com',100,2);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Marisela','Peñas','Villena-Noguera','Comprador','123','Marisela.115@gmail.com',100,4);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Javier','Garay','Oliver','Comprador','123','Javier.116@gmail.com',100,10);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Salud','Recio','Soler','Comprador','123','Salud.117@gmail.com',100,2);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Mamen','Vergara','Baez','Comprador','123','Mamen.118@gmail.com',100,9);
+INSERT INTO PF_CM.USUARIO (nombre, apellido1, apellido2, rol, contrasena, email, puntUacion, id_proveedor) VALUES ('Angelino','Casal','Heredia','Comprador','123','Angelino.119@gmail.com',100,10);
