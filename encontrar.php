@@ -139,7 +139,7 @@ elseif($opcion==2){
                 echo "<h6 class='card-subtitle mb-2 text-muted'>Especialidad:</h6>";
                 echo "<h6 class='card-subtitle mb-2 text-muted'>" . $row['ROLL'] .      "</h6>";
                 echo "<h6 class='card-subtitle mb-2 text-muted'>Puntuacion:</h6>";
-                echo "<h6 class='card-subtitle mb-2 text-muted'>" . $row['PUNTUACION'] .      "</h6>";
+                echo "<h6 class='card-subtitle mb-2 text-muted'>" . $row['PUNTACION'] .      "</h6>";
                 echo " <p class='card-text'>" . $row['EMAIL'] .      "</p>";
                 echo "<a href='deleteu.php?id_usuario=" .  $row['ID_USUARIO'] .
                     "' class='btn btn-primary'> Eliminar </a>";
@@ -182,7 +182,7 @@ elseif($opcion==3){
                 echo "<h6 class='card-subtitle mb-2 text-muted'>Valor:</h6>";
                 echo "<h6 class='card-subtitle mb-2 text-muted'>" . $row['VALOR'] .      "</h6>";
                 echo "<h6 class='card-subtitle mb-2 text-muted'>Puntuacion:</h6>";
-                echo "<h6 class='card-subtitle mb-2 text-muted'>" . $row['PUNTUACION'] .      "</h6>";
+                echo "<h6 class='card-subtitle mb-2 text-muted'>" . $row['PUNTACION'] .      "</h6>";
                 echo " <p class='card-text'>" . $row['EMAIL'] .      "</p>";
                 echo "<a href='deletec.php?id_empresa=" .  $row['ID_EMPRESA'] .
                     "' class='btn btn-primary'> Eliminar </a>";

@@ -1,10 +1,9 @@
----En aquellos donde se puntue coloque number para darles valores del 1 al 5
 
 create table proveedor(
 id_proveedor number not null
 ,nombre varchar(25)
 ,email varchar (25)
-,fiabilidad number
+,fiabilidad number(3)
 ,localizacion varchar(25)
 ,producto varchar (25)
 ,primary key (id_proveedor)
@@ -25,7 +24,6 @@ id_usuario number not null
 ,FOREIGN KEY (id_proveedor) REFERENCES proveedor(id_proveedor) 
 );
 
-
 create table Contratista(
 id_empresa number not null
 ,nombre varchar(25)
@@ -42,7 +40,7 @@ id_empresa number not null
 );
 
 create table Anteproyecto(
-id_ante_proyecto number not null
+id_ante_proyecto NUMBER GENERATED ALWAYS AS IDENTITY
 ,Localizacion varchar(25)
 ,descripcion varchar(25)
 ,presupuesto number
@@ -56,7 +54,7 @@ id_ante_proyecto number not null
 );
 
 create table proyectos (
-id_proyecto number not null
+id_proyecto NUMBER GENERATED ALWAYS AS IDENTITY
 ,descripcion varchar(50)
 ,duracion varchar(10)
 ,tipo varchar (5)
@@ -68,19 +66,61 @@ id_proyecto number not null
 ,primary key  (id_proyecto)
 ,FOREIGN KEY (id_ante_proyecto) REFERENCES Anteproyecto(id_ante_proyecto)
 );
-----------------------------------------------------------------------------------
-----INSERTS
-insert into proveedor values(1,'juan','juan@gmail.com',5,'SanJose','Ceramica');
-insert into usuario values(1,'Jack','Zeledon','Castillo','Albañil','Jack123','Jack@gmail.com',5,1);
-insert into usuario values(2,'ack','ledon','Castillana','Obrero','ack123','ack@gmail.com',2,2);
-insert into Contratista values(1,'A Vapor',5,'info@avapor.co.cr','Contruvapor123',5,1,1);
------Drops
+---------------------------------------------------------------
+-----------------------
+
+CREATE OR REPLACE TRIGGER TRG_ANTEPROYECTOS
+AFTER INSERT ON Anteproyecto
+DECLARE
+    VAR_IDANTEPROYECTO NUMBER(10);
+    VAR_LOCALIZACION VARCHAR2(100);
+    VAR_DESCRIPCION VARCHAR2(100);
+    VAR_DURACION VARCHAR2(100);
+    
+BEGIN
+    SELECT id_ante_proyecto INTO VAR_IDANTEPROYECTO FROM Anteproyecto;
+    SELECT Localizacion INTO VAR_LOCALIZACION FROM Anteproyecto;
+    SELECT descripcion INTO VAR_DESCRIPCION FROM Anteproyecto;
+    SELECT descripcion INTO VAR_DESCRIPCION FROM Anteproyecto;
+    SELECT duracionaprox INTO VAR_DURACION FROM Anteproyecto;
+    INSERT INTO proyectos( descripcion, duracion, tipo, localizacion, valor, planofinal, id_ante_proyecto)
+    VALUES              (VAR_DESCRIPCION, VAR_DURACION, 'HOLD', VAR_LOCALIZACION, 0, 'Pendiente', VAR_IDANTEPROYECTO);
+END;
+
+INSERT INTO PROVEEDOR (id_proveedor,nombre, email, fiabilidad, localizacion, producto) VALUES (1,'Materiales Jota', 'mjota@gmail.com', 75, 'Heredia', 'Materiales construccion');
+INSERT INTO USUARIO (id_usuario,nombre, apellido1, apellido2, roll, contrasena, email, puntacion, id_proveedor) VALUES (1,'Jose', 'Rodriguez', 'Jara', 'Servicios', '123', 'jose@gmail.com', 100, 1);
+INSERT INTO CONTRATISTA (id_empresa,nombre, puntacion, email, contrasena, valor, id_proveedor, id_usuario) VALUES (1,'Constructora Izq SA', 5, 'cizq@gmail.com', '123', 123, 1,  1);
+INSERT INTO ANTEPROYECTO (Localizacion, descripcion, presupuesto, duracionaprox, id_usuario, id_empresa) VALUES ('Heredia', 'Materiales construcción.', 5000000.00, '8 meses', 1, 1);
+-----------------------------------------------
+create table FIABILIDAD(
+    codigo_registro  NUMBER GENERATED ALWAYS AS IDENTITY,
+    codigo_proveedor NUMBER(10) NOT NULL,
+    promedio_anterior NUMBER(3) NOT NULL,
+    promedio_actualizado NUMBER(3) NOT NULL,
+    fecha DATE
+);
+-----------------------------------------------------
+-------------------------
+CREATE OR REPLACE TRIGGER TRG_PROYECTOS
+AFTER UPDATE ON PROYECTOS
+FOR EACH ROW
+WHEN (NEW.VALOR != 0)
+    BEGIN
+    UPDATE PROYECTOS SET PLANOFINAL = 'APROBADOS';
+END;
+------------------------
+create view muestraprov as SELECT * FROM proveedor;
+create view muestrausers as SELECT * FROM Usuario;
+create view muestracont as SELECT * FROM Contratista;
+-----
+------------------DROPS
 drop table proveedor;
 drop table Usuario;
 drop table Contratista;
 drop table Anteproyecto;
 drop table proyectos;
-----------------------------------------------------------
-create view muestraprov as SELECT * FROM proveedor;
-create view muestrausers as SELECT * FROM Usuario;
-create view muestracont as SELECT * FROM Contratista;
+drop table fiabilidad;
+
+drop view muestraprov;
+drop view muestrausers;
+drop view muestracont;
