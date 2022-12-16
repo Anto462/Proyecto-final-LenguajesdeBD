@@ -138,7 +138,7 @@ if (isset($_POST["id_usuario"]) && !empty($_POST["id_usuario"])) {
                     <a class="nav-link active nav-izquierda" href="sobre.html"><img src="https://creazilla-store.fra1.digitaloceanspaces.com/emojis/56482/gear-emoji-clipart-md.png" width="25" height="25" class="d-inline-block align-top" alt=""/>  Mas sobre nosotros</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link active nav-izquierda" href=""><img src="https://creazilla-store.fra1.digitaloceanspaces.com/emojis/56482/gear-emoji-clipart-md.png" width="25" height="25" class="d-inline-block align-top" alt=""/>  Proyectos</a>
+                    <a class="nav-link active nav-izquierda" href="proyectos.php"><img src="https://creazilla-store.fra1.digitaloceanspaces.com/emojis/56482/gear-emoji-clipart-md.png" width="25" height="25" class="d-inline-block align-top" alt=""/>  Proyectos</a>
                   </li>
                   <li class="nav-item">
                     <a class="nav-link active nav-izquierda" href="general.php"><img src="https://creazilla-store.fra1.digitaloceanspaces.com/emojis/56482/gear-emoji-clipart-md.png" width="25" height="25" class="d-inline-block align-top" alt=""/>  Encontrar</a>
@@ -165,7 +165,7 @@ if (isset($_POST["id_usuario"]) && !empty($_POST["id_usuario"])) {
     </header>
     <hr>
     <div class="boxsn">
-    <h1 class="titulossn">Actualiza un provedor</h1>
+    <h1 class="titulossn">Actualiza un trabajador</h1>
     </div>
     <hr>
 

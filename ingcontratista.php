@@ -142,7 +142,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <a class="nav-link active nav-izquierda" href="sobre.html"><img src="https://creazilla-store.fra1.digitaloceanspaces.com/emojis/56482/gear-emoji-clipart-md.png" width="25" height="25" class="d-inline-block align-top" alt=""/>  Mas sobre nosotros</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link active nav-izquierda" href=""><img src="https://creazilla-store.fra1.digitaloceanspaces.com/emojis/56482/gear-emoji-clipart-md.png" width="25" height="25" class="d-inline-block align-top" alt=""/>  Proyectos</a>
+                    <a class="nav-link active nav-izquierda" href="proyectos.php"><img src="https://creazilla-store.fra1.digitaloceanspaces.com/emojis/56482/gear-emoji-clipart-md.png" width="25" height="25" class="d-inline-block align-top" alt=""/>  Proyectos</a>
                   </li>
                   <li class="nav-item">
                     <a class="nav-link active nav-izquierda" href="general.php"><img src="https://creazilla-store.fra1.digitaloceanspaces.com/emojis/56482/gear-emoji-clipart-md.png" width="25" height="25" class="d-inline-block align-top" alt=""/>  Encontrar</a>
@@ -169,14 +169,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </header>
     <hr>
     <div class="boxsn">
-    <h1 class="titulossn">Agrega un provedor</h1>
+    <h1 class="titulossn">Agrega una empresa o contratista</h1>
     </div>
     <hr>
     <div class="container">
             <div class="row">
                 <div class="col-md-12">
                     <div class="centrar" style="color: whitesmoke;">
-                    <p>Ingreso de proveedor</p>
+                    <p>Informaciom:</p>
                     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
                         <div class="form-group <?php echo (!empty($id_empresa_err)) ? 'has-error' : ''; ?>">
                             <label>id_empresa</label>
@@ -219,8 +219,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <input type="text" name="id_usuario" class="form-control" value="<?php echo $id_usuario; ?>">
                             <span class="help-block"><?php echo $id_usuario_err; ?></span>
                         </div>
+                        <br>
                         <input type="submit" class="btn btn-primary" value="Crear">
-                        <a href="index.php" class="btn btn-default">Cancelar</a>
+                        <a href="encontrar.php?opcion=3" class="btn btn-primary">Cancelar</a>
                     </form>
                 </div>
             </div>

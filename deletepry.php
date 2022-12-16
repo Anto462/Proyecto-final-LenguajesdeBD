@@ -1,33 +1,42 @@
 <?php
-if (isset($_POST["id_usuario"]) && !empty($_POST["id_usuario"])) {
+if (isset($_POST["id_ante_proyecto"]) && !empty($_POST["id_ante_proyecto"])) {
     require_once "config.php";
 
     //Sentencia de de delete
-    $sql = "DELETE FROM usuario WHERE id_usuario = ?";
+    $sql = "DELETE FROM proyectos WHERE id_ante_proyecto = ?";
+    
 
     if ($stmt = $link->prepare($sql)) {
-        $stmt->bindParam(1, $param_id_usuario, PDO::PARAM_INT);
+        $stmt->bindParam(1, $param_id_ante_proyecto, PDO::PARAM_INT);
 
-        $param_id_usuario = trim($_POST["id_usuario"]);
+        $param_id_ante_proyecto = trim($_POST["id_ante_proyecto"]);
 
         if ($stmt->execute()) {
-                header("location: encontrar.php?opcion=2");
-                exit();
-                echo "Exito...";
+                $sql = "DELETE FROM Anteproyecto WHERE id_ante_proyecto = ?";
+                if ($stmt = $link->prepare($sql)) {
+                    $stmt->bindParam(1, $param_id_ante_proyecto, PDO::PARAM_INT);
+            
+                    $param_id_ante_proyecto = trim($_POST["id_ante_proyecto"]);
+            
+                    if ($stmt->execute()) {
+                            header("location: proyectos.php");
+                            exit();
+                            echo "Exito...";
+                    } else {
+                        echo "Error al eliminar";
+                    }
+                }
         } else {
             echo "Error al eliminar";
         }
     }
     $stmt->closeCursor();
 } else {
-    if (empty(trim($_GET["id_usuario"]))) {
+    if (empty(trim($_GET["id_ante_proyecto"]))) {
         echo "no existe";
     }
 }
 ?>
-
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -40,7 +49,7 @@ if (isset($_POST["id_usuario"]) && !empty($_POST["id_usuario"])) {
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.css">
     <link rel="stylesheet" href="Css/normalize.css">
     <link rel="icon" href="images/Cono-vial-2-923x1024.png" type="image/x-icon">
-    <style type="text/css">
+    <style type="">
         .wrapper {
             width: 500px;
             margin: 0 auto;
@@ -48,7 +57,7 @@ if (isset($_POST["id_usuario"]) && !empty($_POST["id_usuario"])) {
     </style>
 </head>
 
-<body>
+<body style="background: whitesmoke;">
     <div class="wrapper">
         <div class="container-fluid">
             <div class="row">
@@ -58,7 +67,7 @@ if (isset($_POST["id_usuario"]) && !empty($_POST["id_usuario"])) {
                     </div>
                     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
                         <div class="alert alert-secondary fade in">
-                            <input type="hidden" name="id_usuario" value="<?php echo trim($_GET["id_usuario"]); ?>" />
+                            <input type="hidden" name="id_ante_proyecto" value="<?php echo trim($_GET["id_ante_proyecto"]); ?>" />
                             <p>Estas seguro de borrar este registro?</p><br>
                             <p>
                                 <input type="submit" value="Si" class="btn btn-danger">

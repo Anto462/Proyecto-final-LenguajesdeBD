@@ -147,7 +147,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <a class="nav-link active nav-izquierda" href="sobre.html"><img src="https://creazilla-store.fra1.digitaloceanspaces.com/emojis/56482/gear-emoji-clipart-md.png" width="25" height="25" class="d-inline-block align-top" alt=""/>  Mas sobre nosotros</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link active nav-izquierda" href=""><img src="https://creazilla-store.fra1.digitaloceanspaces.com/emojis/56482/gear-emoji-clipart-md.png" width="25" height="25" class="d-inline-block align-top" alt=""/>  Proyectos</a>
+                    <a class="nav-link active nav-izquierda" href="proyectos.php"><img src="https://creazilla-store.fra1.digitaloceanspaces.com/emojis/56482/gear-emoji-clipart-md.png" width="25" height="25" class="d-inline-block align-top" alt=""/>  Proyectos</a>
                   </li>
                   <li class="nav-item">
                     <a class="nav-link active nav-izquierda" href="general.php"><img src="https://creazilla-store.fra1.digitaloceanspaces.com/emojis/56482/gear-emoji-clipart-md.png" width="25" height="25" class="d-inline-block align-top" alt=""/>  Encontrar</a>
@@ -174,7 +174,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </header>
     <hr>
     <div class="boxsn">
-    <h1 class="titulossn">Agrega un provedor</h1>
+    <h1 class="titulossn">Agrega un Trabajador</h1>
     </div>
     <hr>
         <div class="container">
@@ -185,48 +185,48 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
                         <div class="form-group <?php echo (!empty($id_usuario_err)) ? 'has-error' : ''; ?>">
                             <label>id_usuario</label>
-                            <input type="text" name="id_usuario" class="form-controll" value="<?php echo $id_usuario; ?>">
+                            <input type="text" name="id_usuario" class="form-control" value="<?php echo $id_usuario; ?>">
                             <span class="help-block"><?php echo $id_usuario_err; ?></span>
                         </div>
                         <div class="form-group <?php echo (!empty($nombre_err)) ? 'has-error' : ''; ?>">
                             <label>Nombre</label>
-                            <input type="text" name="nombre" class="form-controll" value="<?php echo $nombre; ?>">
+                            <input type="text" name="nombre" class="form-control" value="<?php echo $nombre; ?>">
                             <span class="help-block"><?php echo $nombre_err; ?></span>
                         </div>
                         <div class="form-group <?php echo (!empty($apellido1_err)) ? 'has-error' : ''; ?>">
                             <label>apellido1</label>
-                            <textarea name="apellido1" class="form-controll"><?php echo $apellido1; ?></textarea>
+                            <textarea name="apellido1" class="form-control"><?php echo $apellido1; ?></textarea>
                             <span class="help-block"><?php echo $apellido1_err; ?></span>
                         </div>
                         <div class="form-group <?php echo (!empty($apellido2_err)) ? 'has-error' : ''; ?>">
                             <label>apellido2</label>
-                            <input type="text" name="apellido2" class="form-controll" value="<?php echo $apellido2; ?>">
+                            <input type="text" name="apellido2" class="form-control" value="<?php echo $apellido2; ?>">
                             <span class="help-block"><?php echo $apellido2_err; ?></span>
                         </div>
                         <div class="form-group <?php echo (!empty($roll_err)) ? 'has-error' : ''; ?>">
                             <label>roll</label>
-                            <input type="text" name="roll" class="form-controll" value="<?php echo $roll; ?>">
+                            <input type="text" name="roll" class="form-control" value="<?php echo $roll; ?>">
                             <span class="help-block"><?php echo $roll_err; ?></span>
                         </div>
                         <div class="form-group <?php echo (!empty($contrasena_err)) ? 'has-error' : ''; ?>">
                             <label>contrasena</label>
-                            <input type="text" name="contrasena" class="form-controll" value="<?php echo $contrasena; ?>">
+                            <input type="text" name="contrasena" class="form-control" value="<?php echo $contrasena; ?>">
                             <span class="help-block"><?php echo $contrasena_err; ?></span>
                         </div>
 
                         <div class="form-group <?php echo (!empty($email_err)) ? 'has-error' : ''; ?>">
                             <label>email</label>
-                            <input type="text" name="email" class="form-controll" value="<?php echo $email; ?>">
+                            <input type="text" name="email" class="form-control" value="<?php echo $email; ?>">
                             <span class="help-block"><?php echo $email_err; ?></span>
                         </div>
                         <div class="form-group <?php echo (!empty($puntacion_err)) ? 'has-error' : ''; ?>">
                             <label>puntacion</label>
-                            <input type="text" name="puntacion" class="form-controll" value="<?php echo $puntacion; ?>">
+                            <input type="text" name="puntacion" class="form-control" value="<?php echo $puntacion; ?>">
                             <span class="help-block"><?php echo $puntacion_err; ?></span>
                         </div>
                         <div class="form-group <?php echo (!empty($id_proveedor_err)) ? 'has-error' : ''; ?>">
                             <label>id_proveedor</label>
-                            <input type="text" name="id_proveedor" class="form-controll" value="<?php echo $id_proveedor; ?>">
+                            <input type="text" name="id_proveedor" class="form-control" value="<?php echo $id_proveedor; ?>">
                             <span class="help-block"><?php echo $id_proveedor_err; ?></span>
                         </div>
                         <br>

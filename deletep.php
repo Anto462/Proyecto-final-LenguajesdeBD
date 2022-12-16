@@ -34,9 +34,13 @@ if (isset($_POST["id_proveedor"]) && !empty($_POST["id_proveedor"])) {
 
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Borrar Registro</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.css">
-    <style type="text/css">
+    <link rel="stylesheet" href="Css/normalize.css">
+    <link rel="icon" href="images/Cono-vial-2-923x1024.png" type="image/x-icon">
+    <style type="">
         .wrapper {
             width: 500px;
             margin: 0 auto;
@@ -44,7 +48,7 @@ if (isset($_POST["id_proveedor"]) && !empty($_POST["id_proveedor"])) {
     </style>
 </head>
 
-<body>
+<body style="background: whitesmoke;">
     <div class="wrapper">
         <div class="container-fluid">
             <div class="row">
@@ -53,12 +57,12 @@ if (isset($_POST["id_proveedor"]) && !empty($_POST["id_proveedor"])) {
                         <h1>Borrar Registro</h1>
                     </div>
                     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-                        <div class="alert alert-danger fade in">
+                        <div class="alert alert-secondary fade in">
                             <input type="hidden" name="id_proveedor" value="<?php echo trim($_GET["id_proveedor"]); ?>" />
                             <p>Estas seguro de borrar este registro?</p><br>
                             <p>
                                 <input type="submit" value="Si" class="btn btn-danger">
-                                <a href="index.html" class="btn btn-default">No</a>
+                                <a href="index.html" class="btn btn-primary">No</a>
                             </p>
                         </div>
                     </form>

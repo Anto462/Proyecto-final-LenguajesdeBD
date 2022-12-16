@@ -58,83 +58,73 @@
     </header>
     <hr>
     <div class="boxsn">
-    <h1 class="titulossn">Encuentran a un especialista</h1>
+    <h1 class="titulossn">Status del proyecto</h1>
     </div>
     <hr>
-    <div>
-        <h2 class="titulos">¿Que buscas el dia de hoy?</h2>
-        <div class="containercardsi">
+    <div class="main">
+<?php
+error_reporting(0);
+$opcion = ($_GET['id_ante_proyecto']);
+require_once "config.php";
 
-          <div style='background-color:  black; margin:5px ;' class='row row-cols-4 centrar cardsi'></div>
-          <div class="card text-white bg-dark mb-3" style="max-width: 540px;">
-            <div class="row g-0">
-              <div class="col-md-4">
-                <img src="images/provider2.jpg" class="img-fluid rounded-start"  alt="">
-              </div>
-              <div class="col-md-8">
-                <div class="card-body">
-                  <h5 class="card-title">Proveedores</h5>
-                  <p class="card-text">"Encuentra a los mejores proveedores en una amplia gama de productos a seleccionar"</p>
-                  <a style="color: whitesmoke; font-size: 30px;" class="nav-link active" href="encontrar.php?opcion=1">Ver</a>
-                </div>
-              </div>
-            </div>
-          </div>
-        
+$sql = "SELECT * FROM proyectos where id_ante_proyecto = $opcion";
+if ($result = $link->query($sql)) {
+    if ($result->fetchColumn() > 0) {
+        echo "<table class='table table-light table-bordered table-striped'>";
+        echo "<thead>";
+        echo "<tr>";
+        echo "<th>id_proyecto</th>";
+        echo "<th>localizacion</th>";
+        echo "<th>valor</th>";
+        echo "<th>tipo</th>";
+        echo "<th>duracion</th>";
+        echo "<th>descripcion</th>";
+        echo "<th>planofinal</th>";
+        echo "</tr>";
+        echo "</thead>";
+        echo "<tbody>";
+        //while($row = mysqli_fetch_array($result)){
+        foreach ($link->query($sql) as $row) {
+            echo "<tr>";
+            echo "<td>" . $row['ID_PROYECTO'] . "</td>";
+            echo "<td>" . $row['LOCALIZACION'] . "</td>";
+            echo "<td>" . $row['VALOR'] . "</td>";
+            echo "<td>" . $row['TIPO'] . "</td>";
+            echo "<td>" . $row['DURACION'] . "</td>";
+            echo "<td>" . $row['DESCRIPCION'] . "</td>";
+            echo "<td>" . $row['PLANOFINAL'] . "</td>";
+            echo "</tr>";
+        }
+        echo "</tbody>";
+        echo "</table>";
 
-        <div style='background-color:  black; margin:5px ;' class='row row-cols-4 centrar cardsi'></div>
-          <div class="card text-white bg-dark mb-3" style="max-width: 540px;">
-            <div class="row g-0">
-              <div class="col-md-4">
-                <img src="images/worker1.jpg" class="img-fluid rounded-start"  alt="">
-              </div>
-              <div class="col-md-8">
-                <div class="card-body">
-                  <h5 class="card-title">Trabajadores</h5>
-                  <p class="card-text">"Busca al especialista que requieres de manera rapida y confiable"</p>
-                  <a style="color: whitesmoke; font-size: 30px;" class="nav-link active" href="encontrar.php?opcion=2">Ver</a>
-                </div>
-              </div>
-            </div>
-          </div>
+        echo "<a href='deletepry.php?id_ante_proyecto=" .  $row['ID_ANTE_PROYECTO'] ."' class='btn btn-primary'> Eliminar </a>";
+        echo "  ";
+        echo "<a href='proyectos.php?' class='btn btn-primary'> Volver </a>";
 
-          <div style='background-color:  black; margin:5px ;' class='row row-cols-4 centrar cardsi'></div>
-          <div class="card text-white bg-dark mb-3" style="max-width: 540px;">
-            <div class="row g-0">
-              <div class="col-md-4">
-                <img src="images/contratis1.jpg" class="img-fluid rounded-start"  alt="">
-              </div>
-              <div class="col-md-8">
-                <div class="card-body">
-                  <h5 class="card-title">Contratistas y Constructoras</h5>
-                  <p class="card-text">"¿Buscas alguien que se haga cargo de tu obra? Encuentra los mejores"</p>
-                  <a style="color: whitesmoke; font-size: 30px;" class="nav-link active" href="encontrar.php?opcion=3">Ver</a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    <hr>
-    <hr>
+        $result->closeCursor();
+    }
+}
+?>                    
+</div>
+<hr>
 <footer>
 <div class="footer-cont">
-  <div>
-    <h3 style="font-size: 35px; text-transform: capitalize;">Soporte: </h3>
-    <p>Numero: +506 4030 1765</p>
-    <p>Mail: Soporte@construnet.co.cr</p>
-  </div>
-  <div>
-    <h3 style="font-size: 30px; text-transform: capitalize">SIGUENOS: </h3>
-    <ul class="socialmedia">
-      <li><a href="https://www.facebook.com/"><i class="fa fa-facebook"></i></a></li>
-      <li><a href="https://www.youtube.com/"><i class="fa fa-youtube"></i></a></li>
-      <li><a href="https://www.instagram.com/?msclkid=b1784819abf211eca4613ea94873a212"><i class="fa fa-instagram"></i></a></li>
-    </ul>
-  </div>
-  <p>&copy; 2022 Lenguajes de BD <Span>Proyecto final</Span></p>
-  </div>
+<div>
+<h3 style="font-size: 35px; text-transform: capitalize;">Soporte: </h3>
+<p>Numero: +506 4030 1765</p>
+<p>Mail: Soporte@construnet.co.cr</p>
+</div>
+<div>
+<h3 style="font-size: 30px; text-transform: capitalize">SIGUENOS: </h3>
+<ul class="socialmedia">
+<li><a href="https://www.facebook.com/"><i class="fa fa-facebook"></i></a></li>
+<li><a href="https://www.youtube.com/"><i class="fa fa-youtube"></i></a></li>
+<li><a href="https://www.instagram.com/?msclkid=b1784819abf211eca4613ea94873a212"><i class="fa fa-instagram"></i></a></li>
+</ul>
+</div>
+<p>&copy; 2022 Lenguajes de BD <Span>Proyecto final</Span></p>
+</div>
 </footer>    
 </body>
 </html>

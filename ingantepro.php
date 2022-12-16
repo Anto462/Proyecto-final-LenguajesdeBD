@@ -3,82 +3,80 @@
 require_once "config.php";
 
 // Variables a insertar y errores
-$id_proveedor = $nombre = $email = $fiabilidad = $localizacion = $producto = "";
-$id_proveedor_err = $nombre_err = $email_err = $fiabilidad_err = $localizacion_err = $producto_err = "";
+$Localizacion = $descripcion = $presupuesto = $duracionaprox = $id_usuario = $id_empresa = "";
+$Localizacion_err = $descripcion_err = $presupuesto_err = $duracionaprox_err = $id_usuario_err = $id_empresa_err = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     /////////////VALIDACIONES
-    $input_id_proveedor = trim($_POST["id_proveedor"]);
-    if (empty($input_id_proveedor)) {
-        $id_proveedor_err = "Ingrese un monto de id_proveedor";
-    } elseif (!ctype_digit($input_id_proveedor)) {
-        $id_proveedor_err = "Debe añadir un numero positivo o bien no esta disponible";
+    $input_Localizacion = trim($_POST["Localizacion"]);
+    if (empty($input_Localizacion)) {
+        $Localizacion_err = "Ingrese un Localizacion.";
+    } elseif (!filter_var($input_Localizacion, FILTER_VALIDATE_REGEXP, array("options" => array("regexp" => "/^[a-zA-Z\s]+$/")))) {
+        $Localizacion_err = "Localizacion invalido";
     } else {
-        $id_proveedor = $input_id_proveedor;
-    }
-    
-    $input_nombre = trim($_POST["nombre"]);
-    if (empty($input_nombre)) {
-        $nombre_err = "Ingrese un nombre.";
-    } elseif (!filter_var($input_nombre, FILTER_VALIDATE_REGEXP, array("options" => array("regexp" => "/^[a-zA-Z\s]+$/")))) {
-        $nombre_err = "Nombre invalido";
-    } else {
-        $nombre = $input_nombre;
+        $Localizacion = $input_Localizacion;
     }
 
-    $input_email = trim($_POST["email"]);
-    if (empty($input_email)) {
-        $email_err = "Ingrese un email";
+    $input_descripcion = trim($_POST["descripcion"]);
+    if (empty($input_descripcion)) {
+        $descripcion_err = "Ingrese un descripcion";
     } else {
-        $email = $input_email;
+        $descripcion = $input_descripcion;
     }
 
-    $input_fiabilidad = trim($_POST["fiabilidad"]);
-    if (empty($input_fiabilidad)) {
-        $fiabilidad_err = "Ingrese una fiabilidad valida del 1-5";
-    } elseif (!ctype_digit($input_fiabilidad)) {
-        $fiabilidad_err = "Ingrese una fiabilidad valida del 1-5";
+    $input_presupuesto= trim($_POST["presupuesto"]);
+    if (empty($input_presupuesto)) {
+        $presupuesto_err = "Ingrese un presupuesto";
     } else {
-        $fiabilidad = $input_fiabilidad;
+        $presupuesto = $input_presupuesto;
     }
 
-    $input_localizacion = trim($_POST["localizacion"]);
-    if (empty($input_localizacion)) {
-        $localizacion_err = "Ingrese un localizacion.";
+    $input_duracionaprox= trim($_POST["duracionaprox"]);
+    if (empty($input_duracionaprox)) {
+        $duracionaprox_err = "Ingrese un duracionaprox";
     } else {
-        $localizacion = $input_localizacion;
+        $duracionaprox = $input_duracionaprox;
     }
 
-    $input_producto= trim($_POST["producto"]);
-    if (empty($input_producto)) {
-        $producto_err = "Ingrese un producto";
+    $input_id_usuario= trim($_POST["id_usuario"]);
+    if (empty($input_id_usuario)) {
+        $id_usuario_err = "Ingrese un id_usuario";
     } else {
-        $producto = $input_producto;
+        $id_usuario = $input_id_usuario;
+    }
+
+    $input_id_empresa = trim($_POST["id_empresa"]);
+    if (empty($input_id_empresa)) {
+        $id_empresa_err = "Ingrese un id_empresa";
+    } else {
+        $id_empresa = $input_id_empresa;
     }
 
     // //Verificacion errores
-    if (empty($id_proveedor_err) && empty($localizacion_err) && empty($producto_err) && empty($nombre_err) && empty($email_err) && empty($fiabilidad_err)) {
-        $sql = "INSERT INTO proveedor (id_proveedor,nombre, email, fiabilidad,localizacion,producto) VALUES (?,?,?,?,?,?)";
+    if (empty($duracionaprox_err) && empty($id_usuario_err) && empty($Localizacion_err) &&
+     empty($descripcion_err) && empty($presupuesto_err) && empty($id_empresa_err)) {
+        $sql = "INSERT INTO Anteproyecto (Localizacion,descripcion,presupuesto,duracionaprox,id_usuario,id_empresa) VALUES (?,?,?,?,?,?)";
 
         if ($stmt = $link->prepare($sql)) {
 
-            $stmt->bindParam(1, $param_id_proveedor, PDO::PARAM_STR);
-            $stmt->bindParam(2, $param_nombre, PDO::PARAM_STR);
-            $stmt->bindParam(3, $param_email, PDO::PARAM_STR);
-            $stmt->bindParam(4, $param_fiabilidad, PDO::PARAM_STR);
-            $stmt->bindParam(5, $param_localizacion, PDO::PARAM_STR);
-            $stmt->bindParam(6, $param_producto, PDO::PARAM_STR);
-
+            $stmt->bindParam(1, $param_Localizacion, PDO::PARAM_STR);
+            $stmt->bindParam(2, $param_descripcion, PDO::PARAM_STR);
+            $stmt->bindParam(3, $param_presupuesto, PDO::PARAM_STR);
+            $stmt->bindParam(4, $param_duracionaprox, PDO::PARAM_STR);
+            $stmt->bindParam(5, $param_id_usuario, PDO::PARAM_STR);
+            $stmt->bindParam(6, $param_id_empresa, PDO::PARAM_STR);
+            
             //Se colocan a los parametros los datos
-            $param_id_proveedor = $id_proveedor;
-            $param_nombre = $nombre;
-            $param_email = $email;
-            $param_fiabilidad = $fiabilidad;
-            $param_localizacion = $localizacion;
-            $param_producto = $producto;
+            $param_Localizacion = $Localizacion;
+            $param_descripcion = $descripcion;
+            $param_presupuesto = $presupuesto;
+            $param_duracionaprox = $duracionaprox;
+            $param_id_usuario = $id_usuario;
+            $param_id_empresa = $id_empresa;
+           
 
             if ($stmt->execute()) {
-                header("location: encontrar.php?opcion=1");
+                header("location: proyectos.php");
                 exit();
                 echo "INSERTADOS";
             } else {
@@ -110,7 +108,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container-fluid">
               <a class="navbar-brand" href="index.html"> <img src="images/Installation.png" width="40" height="40" class="d-inline-block align-top" alt=""/>  CONSTRUNET</a>
-              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-contduracionaproxs="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
               </button>
               <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -149,48 +147,50 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </header>
     <hr>
     <div class="boxsn">
-    <h1 class="titulossn">Agrega un provedor</h1>
+    <h1 class="titulossn">Agrega un Ante Proyecto</h1>
     </div>
     <hr>
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
                     <div class="centrar" style="color: whitesmoke;">
-                    <p>Ingreso de proveedor</p>
+                    <p>Informacion:</p>
                     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-                        <div class="form-group <?php echo (!empty($id_proveedor_err)) ? 'has-error' : ''; ?>">
-                            <label>id_proveedor</label>
-                            <input type="text" name="id_proveedor" class="form-control" value="<?php echo $id_proveedor; ?>">
-                            <span class="help-block"><?php echo $id_proveedor_err; ?></span>
+
+                        <div class="form-group <?php echo (!empty($Localizacion_err)) ? 'has-error' : ''; ?>">
+                            <label>Localizacion</label>
+                            <input type="text" name="Localizacion" class="form-control" value="<?php echo $Localizacion; ?>">
+                            <span class="help-block"><?php echo $Localizacion_err; ?></span>
                         </div>
-                        <div class="form-group <?php echo (!empty($nombre_err)) ? 'has-error' : ''; ?>">
-                            <label>Nombre</label>
-                            <input type="text" name="nombre" class="form-control" value="<?php echo $nombre; ?>">
-                            <span class="help-block"><?php echo $nombre_err; ?></span>
+                        <div class="form-group <?php echo (!empty($descripcion_err)) ? 'has-error' : ''; ?>">
+                            <label>descripcion</label>
+                            <textarea name="descripcion" class="form-control"><?php echo $descripcion; ?></textarea>
+                            <span class="help-block"><?php echo $descripcion_err; ?></span>
                         </div>
-                        <div class="form-group <?php echo (!empty($email_err)) ? 'has-error' : ''; ?>">
-                            <label>email</label>
-                            <textarea name="email" class="form-control"><?php echo $email; ?></textarea>
-                            <span class="help-block"><?php echo $email_err; ?></span>
+                        <div class="form-group <?php echo (!empty($presupuesto_err)) ? 'has-error' : ''; ?>">
+                            <label>presupuesto</label>
+                            <input type="text" name="presupuesto" class="form-control" value="<?php echo $presupuesto; ?>">
+                            <span class="help-block"><?php echo $presupuesto_err; ?></span>
                         </div>
-                        <div class="form-group <?php echo (!empty($fiabilidad_err)) ? 'has-error' : ''; ?>">
-                            <label>fiabilidad</label>
-                            <input type="text" name="fiabilidad" class="form-control" value="<?php echo $fiabilidad; ?>">
-                            <span class="help-block"><?php echo $fiabilidad_err; ?></span>
+                        <div class="form-group <?php echo (!empty($duracionaprox_err)) ? 'has-error' : ''; ?>">
+                            <label>duracionaprox</label>
+                            <input type="text" name="duracionaprox" class="form-control" value="<?php echo $duracionaprox; ?>">
+                            <span class="help-block"><?php echo $duracionaprox_err; ?></span>
                         </div>
-                        <div class="form-group <?php echo (!empty($localizacion_err)) ? 'has-error' : ''; ?>">
-                            <label>localizacion</label>
-                            <input type="text" name="localizacion" class="form-control" value="<?php echo $localizacion; ?>">
-                            <span class="help-block"><?php echo $localizacion_err; ?></span>
+                        <div class="form-group <?php echo (!empty($id_usuario_err)) ? 'has-error' : ''; ?>">
+                            <label>id_usuario</label>
+                            <input type="text" name="id_usuario" class="form-control" value="<?php echo $id_usuario; ?>">
+                            <span class="help-block"><?php echo $id_usuario_err; ?></span>
                         </div>
-                        <div class="form-group <?php echo (!empty($producto_err)) ? 'has-error' : ''; ?>">
-                            <label>producto</label>
-                            <input type="text" name="producto" class="form-control" value="<?php echo $producto; ?>">
-                            <span class="help-block"><?php echo $producto_err; ?></span>
+
+                        <div class="form-group <?php echo (!empty($id_empresa_err)) ? 'has-error' : ''; ?>">
+                            <label>id_empresa</label>
+                            <input type="text" name="id_empresa" class="form-control" value="<?php echo $id_empresa; ?>">
+                            <span class="help-block"><?php echo $id_empresa_err; ?></span>
                         </div>
                         <br>
                         <input type="submit" class="btn btn-primary" value="Crear">
-                        <a href="encontrar.php?opcion=1" class="btn btn-primary">Cancelar</a>
+                        <a href="proyectos.php" class="btn btn-primary">Cancelar</a>
                     </form>
                     </div>
                 </div>

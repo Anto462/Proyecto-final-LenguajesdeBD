@@ -58,83 +58,72 @@
     </header>
     <hr>
     <div class="boxsn">
-    <h1 class="titulossn">Encuentran a un especialista</h1>
+    <h1 class="titulossn">Proyectos en desarollo</h1>
     </div>
     <hr>
-    <div>
-        <h2 class="titulos">¿Que buscas el dia de hoy?</h2>
-        <div class="containercardsi">
+    <div class="main">
+<?php
+    // Me coencto
+    require_once "config.php";
 
-          <div style='background-color:  black; margin:5px ;' class='row row-cols-4 centrar cardsi'></div>
-          <div class="card text-white bg-dark mb-3" style="max-width: 540px;">
-            <div class="row g-0">
-              <div class="col-md-4">
-                <img src="images/provider2.jpg" class="img-fluid rounded-start"  alt="">
-              </div>
-              <div class="col-md-8">
-                <div class="card-body">
-                  <h5 class="card-title">Proveedores</h5>
-                  <p class="card-text">"Encuentra a los mejores proveedores en una amplia gama de productos a seleccionar"</p>
-                  <a style="color: whitesmoke; font-size: 30px;" class="nav-link active" href="encontrar.php?opcion=1">Ver</a>
-                </div>
-              </div>
-            </div>
-          </div>
-        
+    // select
+    $sql = "SELECT * FROM muestraant";
+    //nos aseguramos hayan datos
+    if ($result = $link->query($sql)) {
+        if ($result->fetchColumn() > 0) { 
+          echo "<p class='lead'><em>Listado de proyectos</em></p>";
+        } else {
+          echo "<p class='lead'><em>No se tiene registros</em></p>";
+        }
+    } else {
+        echo "ERROR: No se pudo ejecutar $sql. ";
+    }
+echo "<a href='ingantepro.php?' class='btn btn-primary'> Añadir </a>";
+echo "<hr>";
+echo "<div style='background-color:  black; margin:5px ;' class='row row-cols-5 centrar'>";
+//Se comienzan a colocar los usuarios
+foreach ($link->query($sql) as $row) {
+echo "<div style='margin:10px ;' class='card text-center text-white bg-dark mb-3' style='width: 18rem;'>";
+echo "<img src='images/proyecto.jpg' class='card-img-top' alt='...'>";
+echo "<div class='card-body'>";
+echo "<h5 class='card-title'>" . $row['ID_ANTE_PROYECTO']."</h5>";
+echo "<h6 class='card-subtitle mb-2 text-muted'>Localizacion:</h6>";
+echo "<h6 class='card-subtitle mb-2 text-muted'>" . $row['LOCALIZACION'] .      "</h6>";
+echo "<h6 class='card-subtitle mb-2 text-muted'>Presupuesto:</h6>";
+echo "<h6 class='card-subtitle mb-2 text-muted'>" . $row['PRESUPUESTO'] .      "</h6>";
+echo "<h6 class='card-subtitle mb-2 text-muted'>Duracion:</h6>";
+echo "<h6 class='card-subtitle mb-2 text-muted'>" . $row['DURACIONAPROX'] .      "</h6>";
+echo " <p class='card-text'>" . $row['DESCRIPCION'] .      "</p>";
 
-        <div style='background-color:  black; margin:5px ;' class='row row-cols-4 centrar cardsi'></div>
-          <div class="card text-white bg-dark mb-3" style="max-width: 540px;">
-            <div class="row g-0">
-              <div class="col-md-4">
-                <img src="images/worker1.jpg" class="img-fluid rounded-start"  alt="">
-              </div>
-              <div class="col-md-8">
-                <div class="card-body">
-                  <h5 class="card-title">Trabajadores</h5>
-                  <p class="card-text">"Busca al especialista que requieres de manera rapida y confiable"</p>
-                  <a style="color: whitesmoke; font-size: 30px;" class="nav-link active" href="encontrar.php?opcion=2">Ver</a>
-                </div>
-              </div>
-            </div>
-          </div>
+echo "<a href='proyectovermas.php?id_ante_proyecto=" .  $row['ID_ANTE_PROYECTO'] .
+    "' class='btn btn-primary'> Ver status </a>";
+echo "  ";
 
-          <div style='background-color:  black; margin:5px ;' class='row row-cols-4 centrar cardsi'></div>
-          <div class="card text-white bg-dark mb-3" style="max-width: 540px;">
-            <div class="row g-0">
-              <div class="col-md-4">
-                <img src="images/contratis1.jpg" class="img-fluid rounded-start"  alt="">
-              </div>
-              <div class="col-md-8">
-                <div class="card-body">
-                  <h5 class="card-title">Contratistas y Constructoras</h5>
-                  <p class="card-text">"¿Buscas alguien que se haga cargo de tu obra? Encuentra los mejores"</p>
-                  <a style="color: whitesmoke; font-size: 30px;" class="nav-link active" href="encontrar.php?opcion=3">Ver</a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    <hr>
-    <hr>
+echo "</div>";
+echo "</div>";
+}  
+echo "</div>";
+echo "</table>";
+?>                    
+</div>
+<hr>
 <footer>
 <div class="footer-cont">
-  <div>
-    <h3 style="font-size: 35px; text-transform: capitalize;">Soporte: </h3>
-    <p>Numero: +506 4030 1765</p>
-    <p>Mail: Soporte@construnet.co.cr</p>
-  </div>
-  <div>
-    <h3 style="font-size: 30px; text-transform: capitalize">SIGUENOS: </h3>
-    <ul class="socialmedia">
-      <li><a href="https://www.facebook.com/"><i class="fa fa-facebook"></i></a></li>
-      <li><a href="https://www.youtube.com/"><i class="fa fa-youtube"></i></a></li>
-      <li><a href="https://www.instagram.com/?msclkid=b1784819abf211eca4613ea94873a212"><i class="fa fa-instagram"></i></a></li>
-    </ul>
-  </div>
-  <p>&copy; 2022 Lenguajes de BD <Span>Proyecto final</Span></p>
-  </div>
+<div>
+<h3 style="font-size: 35px; text-transform: capitalize;">Soporte: </h3>
+<p>Numero: +506 4030 1765</p>
+<p>Mail: Soporte@construnet.co.cr</p>
+</div>
+<div>
+<h3 style="font-size: 30px; text-transform: capitalize">SIGUENOS: </h3>
+<ul class="socialmedia">
+<li><a href="https://www.facebook.com/"><i class="fa fa-facebook"></i></a></li>
+<li><a href="https://www.youtube.com/"><i class="fa fa-youtube"></i></a></li>
+<li><a href="https://www.instagram.com/?msclkid=b1784819abf211eca4613ea94873a212"><i class="fa fa-instagram"></i></a></li>
+</ul>
+</div>
+<p>&copy; 2022 Lenguajes de BD <Span>Proyecto final</Span></p>
+</div>
 </footer>    
 </body>
 </html>
