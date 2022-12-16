@@ -1,4 +1,3 @@
-
 create table proveedor(
 id_proveedor number not null
 ,nombre varchar(25)
@@ -72,25 +71,39 @@ id_proyecto NUMBER GENERATED ALWAYS AS IDENTITY
 CREATE OR REPLACE TRIGGER TRG_ANTEPROYECTOS
 AFTER INSERT ON Anteproyecto
 DECLARE
-    VAR_IDANTEPROYECTO NUMBER(10);
+    VAR_IDANTEPROYECTO NUMBER;
     VAR_LOCALIZACION VARCHAR2(100);
     VAR_DESCRIPCION VARCHAR2(100);
     VAR_DURACION VARCHAR2(100);
+    VAR_PRESU NUMBER;
+    VAR_TIPO VARCHAR2(100);
+    VAR_CONTROL VARCHAR2(100);
     
 BEGIN
-    SELECT id_ante_proyecto INTO VAR_IDANTEPROYECTO FROM Anteproyecto;
-    SELECT Localizacion INTO VAR_LOCALIZACION FROM Anteproyecto;
-    SELECT descripcion INTO VAR_DESCRIPCION FROM Anteproyecto;
-    SELECT descripcion INTO VAR_DESCRIPCION FROM Anteproyecto;
-    SELECT duracionaprox INTO VAR_DURACION FROM Anteproyecto;
+    SELECT max(id_ante_proyecto) INTO VAR_CONTROL FROM Anteproyecto;
+    SELECT id_ante_proyecto INTO VAR_IDANTEPROYECTO FROM Anteproyecto WHERE id_ante_proyecto = VAR_CONTROL;
+    SELECT presupuesto INTO VAR_PRESU FROM Anteproyecto WHERE id_ante_proyecto = VAR_CONTROL;
+    SELECT Localizacion INTO VAR_LOCALIZACION FROM Anteproyecto WHERE id_ante_proyecto = VAR_CONTROL;
+    SELECT descripcion INTO VAR_DESCRIPCION FROM Anteproyecto WHERE id_ante_proyecto = VAR_CONTROL;
+    SELECT duracionaprox INTO VAR_DURACION FROM Anteproyecto WHERE id_ante_proyecto = VAR_CONTROL;
+    
+    IF VAR_PRESU > 8000000 then
+    VAR_TIPO := 'MED';
+    ELSIF VAR_PRESU > 80000000 then
+    VAR_TIPO := 'BIG';
+    ELSE
+    VAR_TIPO := 'SMALL';
+    END IF;
+    
     INSERT INTO proyectos( descripcion, duracion, tipo, localizacion, valor, planofinal, id_ante_proyecto)
-    VALUES              (VAR_DESCRIPCION, VAR_DURACION, 'HOLD', VAR_LOCALIZACION, 0, 'Pendiente', VAR_IDANTEPROYECTO);
+    VALUES(VAR_DESCRIPCION,VAR_DURACION,VAR_TIPO,VAR_LOCALIZACION,0,'Pendiente',VAR_IDANTEPROYECTO);
 END;
 
 INSERT INTO PROVEEDOR (id_proveedor,nombre, email, fiabilidad, localizacion, producto) VALUES (1,'Materiales Jota', 'mjota@gmail.com', 75, 'Heredia', 'Materiales construccion');
 INSERT INTO USUARIO (id_usuario,nombre, apellido1, apellido2, roll, contrasena, email, puntacion, id_proveedor) VALUES (1,'Jose', 'Rodriguez', 'Jara', 'Servicios', '123', 'jose@gmail.com', 100, 1);
 INSERT INTO CONTRATISTA (id_empresa,nombre, puntacion, email, contrasena, valor, id_proveedor, id_usuario) VALUES (1,'Constructora Izq SA', 5, 'cizq@gmail.com', '123', 123, 1,  1);
 INSERT INTO ANTEPROYECTO (Localizacion, descripcion, presupuesto, duracionaprox, id_usuario, id_empresa) VALUES ('Heredia', 'Materiales construcción.', 5000000.00, '8 meses', 1, 1);
+INSERT INTO ANTEPROYECTO (Localizacion, descripcion, presupuesto, duracionaprox, id_usuario, id_empresa) VALUES ('Belen','Casa Campo',10000,'6 meses',1,1);
 -----------------------------------------------
 create table FIABILIDAD(
     codigo_registro  NUMBER GENERATED ALWAYS AS IDENTITY,
@@ -112,6 +125,7 @@ END;
 create view muestraprov as SELECT * FROM proveedor;
 create view muestrausers as SELECT * FROM Usuario;
 create view muestracont as SELECT * FROM Contratista;
+create view muestraant as SELECT * FROM Anteproyecto;
 -----
 ------------------DROPS
 drop table proveedor;
@@ -124,3 +138,4 @@ drop table fiabilidad;
 drop view muestraprov;
 drop view muestrausers;
 drop view muestracont;
+drop view muestraant;
