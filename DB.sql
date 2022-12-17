@@ -87,10 +87,10 @@ BEGIN
     SELECT descripcion INTO VAR_DESCRIPCION FROM Anteproyecto WHERE id_ante_proyecto = VAR_CONTROL;
     SELECT duracionaprox INTO VAR_DURACION FROM Anteproyecto WHERE id_ante_proyecto = VAR_CONTROL;
     
-    IF VAR_PRESU > 8000000 then
-    VAR_TIPO := 'MED';
-    ELSIF VAR_PRESU > 80000000 then
+    IF VAR_PRESU > 80000000 then
     VAR_TIPO := 'BIG';
+    ELSIF VAR_PRESU > 8000000 then
+    VAR_TIPO := 'MED';
     ELSE
     VAR_TIPO := 'SMALL';
     END IF;
@@ -105,23 +105,19 @@ INSERT INTO CONTRATISTA (id_empresa,nombre, puntacion, email, contrasena, valor,
 INSERT INTO ANTEPROYECTO (Localizacion, descripcion, presupuesto, duracionaprox, id_usuario, id_empresa) VALUES ('Heredia', 'Materiales construcción.', 5000000.00, '8 meses', 1, 1);
 INSERT INTO ANTEPROYECTO (Localizacion, descripcion, presupuesto, duracionaprox, id_usuario, id_empresa) VALUES ('Belen','Casa Campo',10000,'6 meses',1,1);
 -----------------------------------------------
-create table FIABILIDAD(
-    codigo_registro  NUMBER GENERATED ALWAYS AS IDENTITY,
-    codigo_proveedor NUMBER(10) NOT NULL,
-    promedio_anterior NUMBER(3) NOT NULL,
-    promedio_actualizado NUMBER(3) NOT NULL,
-    fecha DATE
-);
------------------------------------------------------
+CREATE VIEW SOCIOSCOMERS
+AS
+SELECT
+    A.id_ante_proyecto as identi,
+    A.descripcion as proyecto,
+    U.nombre as usuario,
+    C.nombre as socio
+FROM ANTEPROYECTO A
+INNER JOIN USUARIO U ON A.id_usuario = U.id_usuario
+INNER JOIN CONTRATISTA C ON A.id_empresa = C.id_empresa;
+--------------------------------------------------------
 -------------------------
-CREATE OR REPLACE TRIGGER TRG_PROYECTOS
-AFTER UPDATE ON PROYECTOS
-FOR EACH ROW
-WHEN (NEW.VALOR != 0)
-    BEGIN
-    UPDATE PROYECTOS SET PLANOFINAL = 'APROBADOS';
-END;
-------------------------
+-----------------------------------------------------
 create view muestraprov as SELECT * FROM proveedor;
 create view muestrausers as SELECT * FROM Usuario;
 create view muestracont as SELECT * FROM Contratista;
@@ -133,9 +129,21 @@ drop table Usuario;
 drop table Contratista;
 drop table Anteproyecto;
 drop table proyectos;
-drop table fiabilidad;
 
 drop view muestraprov;
 drop view muestrausers;
 drop view muestracont;
 drop view muestraant;
+drop view SOCIOSCOMERS;
+----------------------------
+----NO UTILIZADOS
+-------------------------
+CREATE OR REPLACE TRIGGER TRG_PROYECTOS
+AFTER UPDATE ON PROYECTOS
+FOR EACH ROW
+WHEN (NEW.VALOR != 0)
+    BEGIN
+    UPDATE PROYECTOS SET PLANOFINAL = 'APROBADOS';
+END;
+------------------------
+-----
