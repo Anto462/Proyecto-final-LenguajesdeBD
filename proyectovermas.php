@@ -98,14 +98,45 @@ if ($result = $link->query($sql)) {
         echo "</tbody>";
         echo "</table>";
 
-        echo "<a href='deletepry.php?id_ante_proyecto=" .  $row['ID_ANTE_PROYECTO'] ."' class='btn btn-primary'> Eliminar </a>";
+        $result->closeCursor();
+    }
+    echo "<p>Involucrados:<p>";
+    $sql = "SELECT * FROM SOCIOSCOMERS where identi = $opcion";
+    if ($result = $link->query($sql)) {
+    if ($result->fetchColumn() > 0) {
+        echo "<table class='table table-light table-bordered table-striped'>";
+        echo "<thead>";
+        echo "<tr>";
+        echo "<th>Proyecto</th>";
+        echo "<th>Usuario</th>";
+        echo "<th>Socio comercial</th>";
+        echo "</tr>";
+        echo "</thead>";
+        echo "<tbody>";
+        //while($row = mysqli_fetch_array($result)){
+        foreach ($link->query($sql) as $row) {
+            echo "<tr>";
+            echo "<td>" . $row['PROYECTO'] . "</td>";
+            echo "<td>" . $row['USUARIO'] . "</td>";
+            echo "<td>" . $row['SOCIO'] . "</td>";
+            echo "</tr>";
+        }
+        echo "</tbody>";
+        echo "</table>";
+
+        echo "<a href='deletepry.php?id_ante_proyecto=" .  $row['IDENTI'] ."' class='btn btn-primary'> Eliminar </a>";
         echo "  ";
         echo "<a href='proyectos.php?' class='btn btn-primary'> Volver </a>";
 
         $result->closeCursor();
     }
+    
 }
-?>                    
+    
+}
+?>
+<hr>
+                     
 </div>
 <hr>
 <footer>
