@@ -78,7 +78,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         $localizacion = $input_localizacion;
     }
-    // Validacion producto
+    
     $input_producto= trim($_POST["producto"]);
     if (empty($input_producto)) {
         $producto_err = "Por favor ingresa un producto.";
@@ -88,14 +88,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $producto = $input_producto;
     }
 
-    // Revisamos errores antes de continuar
+    
     if (empty($id_proveedor_err) && empty($localizacion_err) && empty($producto_err) && empty($nombre_err) && empty($email_err) && empty($fiabilidad_err)) {
-        // preparamos la sentancia INSERT
+        
         $sql = "INSERT INTO proveedor (id_proveedor,nombre, email, fiabilidad,localizacion,producto) VALUES (?,?,?,?,?,?)";
 
         if ($stmt = $link->prepare($sql)) {
 
-            // Se hace el bindeo de variables para la sentencia
+           
             $stmt->bindParam(1, $param_id_proveedor, PDO::PARAM_STR);
             $stmt->bindParam(2, $param_nombre, PDO::PARAM_STR);
             $stmt->bindParam(3, $param_email, PDO::PARAM_STR);
@@ -103,7 +103,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt->bindParam(5, $param_localizacion, PDO::PARAM_STR);
             $stmt->bindParam(6, $param_producto, PDO::PARAM_STR);
 
-            // settear variables
+           
             $param_id_proveedor = $id_proveedor;
             $param_nombre = $nombre;
             $param_email = $email;
@@ -111,19 +111,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $param_localizacion = $localizacion;
             $param_producto = $producto;
 
-            // Intentando ejecutar la declaración preparada
+            
             if ($stmt->execute()) {
-                // Registros creados con éxito. Redirigiendo a la página de destino
-                //header("location: index.php");
-                //exit();
+                
                 echo "Exito...";
             } else {
                 echo "Paso algo, intente mas tarde...";
             }
         }
 
-        // Cerrando sentencia
-        $stmt->closeCursor(); //PDO close
+        
+        $stmt->closeCursor(); 
     }
 }
 ?>
@@ -208,14 +206,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <a href="create.php" class="btn btn-success pull-right">Agregar nuevo Empleado</a>
                     </div>
                     <?php
-                    // Include config file
+                    
                     require_once "config.php";
 
-                    // Attempt select query execution
+                    
                     $sql = "SELECT * FROM proveedor";
-                    //if($result = mysqli_query($link, $sql)){
+                    
                     if ($result = $link->query($sql)) {
-                        //if(mysqli_num_rows($result) > 0){
+                        
                         if ($result->fetchColumn() > 0) {
                             echo "<table class='table table-bordered table-striped'>";
                             echo "<thead>";
@@ -230,7 +228,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             echo "</tr>";
                             echo "</thead>";
                             echo "<tbody>";
-                            //while($row = mysqli_fetch_array($result)){
+                            
                             foreach ($link->query($sql) as $row) {
                                 echo "<tr>";
                                 echo "<td>" . $row['ID_PROVEEDOR'] . "</td>";
@@ -248,9 +246,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             }
                             echo "</tbody>";
                             echo "</table>";
-                            // Free result set
-                            //mysqli_free_result($result);
-                            $result->closeCursor(); //PDO close
+                            
+                            $result->closeCursor(); 
                         } else {
                             echo "<p class='lead'><em>No hay registros que mostrar.</em></p>";
                         }
@@ -258,8 +255,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         echo "ERROR: No se pudo ejecutar $sql. ";
                     }
 
-                    // Close connection
-                    //mysqli_close($link);
+                    
                     ?>
                 </div>
             </div>
